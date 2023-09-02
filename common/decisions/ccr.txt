@@ -1,0 +1,19 @@
+﻿ccr_decision = {
+	is_shown = { is_player = yes }
+
+	possible = {
+		is_at_war = no
+		NOT = { has_modifier = ccr_recent_changes }
+		hidden_trigger = { NOT = { has_variable = ccr_decision_taken } }
+	}
+
+	when_taken = {
+		trigger_event = {
+			id = ccr.1
+			popup = yes
+		}
+		ccr_block = yes
+	}
+
+	ai_chance = { base = 0 }
+}

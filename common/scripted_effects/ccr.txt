@@ -1,0 +1,4582 @@
+ccr_block = {
+	hidden_effect = { set_variable = ccr_decision_taken }
+}
+
+ccr_unlock = {
+	hidden_effect = { remove_variable = ccr_decision_taken }
+}
+
+ccr_small_change = {
+	if = {
+		limit = { has_game_rule = shorter_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 1
+		}
+	}
+	else_if = {
+		limit = { has_game_rule = default_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 3
+		}
+	}
+	else_if = {
+		limit = { has_game_rule = longer_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 5
+		}
+	}
+}
+
+ccr_large_change = {
+	if = {
+		limit = { has_game_rule = shorter_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 3
+		}
+	}
+	else_if = {
+		limit = { has_game_rule = default_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 5
+		}
+	}
+	else_if = {
+		limit = { has_game_rule = longer_ccr_mod_length }
+		add_modifier = {
+			name = ccr_recent_changes
+			is_decaying = yes
+			years = 10
+		}
+	}
+}
+
+ccr_back = {
+	trigger_event = {
+		id = ccr.1
+		popup = yes
+	}
+}
+
+ccrr_save_religion_var = {
+	set_variable = {
+		name = ccr_new_religion
+		value = $RELIGION$
+	}
+}
+
+ccrr_update_conversion_perc = {
+	set_variable = {
+		name = ccr_conversion_perc
+		value = 0.004
+	}
+		
+	if = {
+		limit = { has_law = law_type:law_religious_schools }
+		if = {
+			limit = {
+				institution_investment_level = {
+					institution = institution_schools
+					value = 5
+				}
+			}
+			change_variable = {
+				name = ccr_conversion_perc
+				multiply = 2
+			}
+		} else_if = {
+			limit = {
+				institution_investment_level = {
+					institution = institution_schools
+					value = 4
+				}
+			}
+			change_variable = {
+				name = ccr_conversion_perc
+				multiply = 1.8
+			}
+		} else_if = {
+			limit = {
+				institution_investment_level = {
+					institution = institution_schools
+					value = 3
+				}
+			}
+			change_variable = {
+				name = ccr_conversion_perc
+				multiply = 1.6
+			}
+		} else_if = {
+			limit = {
+				institution_investment_level = {
+					institution = institution_schools
+					value = 2
+				}
+			}
+			change_variable = {
+				name = ccr_conversion_perc
+				multiply = 1.4
+			}
+		} else = {
+			change_variable = {
+				name = ccr_conversion_perc
+				multiply = 1.2
+			}
+		}
+	}
+}
+
+ccrr_convert_pops = {
+	convert_population = {
+		target = ROOT.var:ccr_new_religion
+		value = ROOT.var:ccr_conversion_perc
+	}
+}
+
+ccrr_ig_devout_remove_ideology = {
+	ig:ig_devout = {
+		remove_ideology = ideology_buddhist_moralist
+		remove_ideology = ideology_confucian
+		remove_ideology = ideology_heavenly_kingdom_theocratic
+		remove_ideology = ideology_hindu_moralist
+		remove_ideology = ideology_moralist
+		remove_ideology = ideology_oriental_orthodox_patriarch
+		remove_ideology = ideology_orthodox_patriarch
+		remove_ideology = ideology_patriarchal
+		remove_ideology = ideology_patriarchal_suffrage
+		remove_ideology = ideology_russian_patriarch
+		remove_ideology = ideology_shinto_moralist
+		remove_ideology = ideology_sikh_moralist
+	}
+}
+
+ccrr_ig_devout_set_piousness = {
+	if = {
+		limit = {
+			ig:ig_devout = { has_ideology = ideology_pious }
+			country_has_state_religion = rel:mahayana
+			OR = {
+				ccrr_tag = { TAG = "CHI" }
+				ccrr_tag = { TAG = "KOR" }
+			}
+		}
+		ig:ig_devout = { remove_ideology = ideology_pious }
+	} else_if = {
+		limit = { ig:ig_devout = { NOT = { has_ideology = ideology_pious } } }
+		add_ideology = ideology_pious
+		ig:ig_devout = { add_ideology = ideology_pious }
+	}
+}
+
+ccrr_ig_devout_set_morality = {
+	if = {
+		limit = {
+			OR = {
+				country_has_state_religion = rel:gelugpa
+				country_has_state_religion = rel:theravada
+			}
+		}
+		ig:ig_devout = { add_ideology = ideology_buddhist_moralist }
+	} else_if = {
+		limit = { country_has_state_religion = rel:hindu }
+		ig:ig_devout = { add_ideology = ideology_hindu_moralist }
+	} else_if = {
+		limit = { country_has_state_religion = rel:mahayana }
+		if = {
+			limit = {
+				OR = {
+					ccrr_tag = { TAG = "CHI" }
+					ccrr_tag = { TAG = "KOR" }
+				}
+			}
+			ig:ig_devout = { add_ideology = ideology_confucian }
+		} else = {
+			ig:ig_devout = { add_ideology = ideology_buddhist_moralist }
+		}
+	} else_if = {
+		limit = {
+			country_has_state_religion = rel:protestant
+			ccrr_tag = { TAG = "TPG" }
+		}
+		ig:ig_devout = { add_ideology = ideology_heavenly_kingdom_theocratic }
+	} else_if = {
+		limit = { country_has_state_religion = rel:shinto }
+		ig:ig_devout = { add_ideology = ideology_shinto_moralist }
+	} else_if = {
+		limit = { country_has_state_religion = rel:sikh }
+		ig:ig_devout = { add_ideology = ideology_sikh_moralist }
+	} else = {
+		ig:ig_devout = { add_ideology = ideology_moralist }
+	}
+}
+
+ccrr_ig_devout_set_patriarchy = {
+	if = {
+		limit = { country_has_state_religion = rel:oriental_orthodox }
+		ig:ig_devout = { add_ideology = ideology_oriental_orthodox_patriarch }
+	} else_if = {
+		limit = { country_has_state_religion = rel:orthodox }
+		if = {
+			limit = { 
+				exists = c:RUS
+				OR = {
+					c:RUS = ROOT
+					AND = {
+						c:RUS = { country_has_state_religion = rel:orthodox }
+						is_subject_of = c:RUS
+					}
+				}
+			}
+			ig:ig_devout = { add_ideology = ideology_russian_patriarch }
+		} else = {
+			ig:ig_devout = { add_ideology = ideology_orthodox_patriarch }
+		}
+	} else_if = {
+		limit = { has_law = law_type:law_womens_suffrage }
+		ig:ig_devout = { add_ideology = ideology_patriarchal_suffrage }
+	} else = {
+		ig:ig_devout = { add_ideology = ideology_patriarchal }
+	}
+}
+
+ccrr_ig_devout_set_name = {
+	if = {
+		limit = { country_has_state_religion = rel:animist }
+		ig:ig_devout = { set_interest_group_name = ig_pagan_shamans }
+	} else_if = {
+		limit = { country_has_state_religion = rel:atheist }
+		ig:ig_devout = { set_interest_group_name = atheist }
+	} else_if = {
+		limit = { country_has_state_religion = rel:catholic }
+		if = {
+			limit = { ccrr_tag = { TAG = "PAP" } }
+			ig:ig_devout = { set_interest_group_name = ig_roman_curia }
+		} else = {
+			ig:ig_devout = { set_interest_group_name = ig_catholic_church }
+		}
+	} else_if = {
+		limit = { country_has_state_religion = rel:gelugpa }
+		ig:ig_devout = { set_interest_group_name = ig_vajrayana_monks }
+	} else_if = {
+		limit = { country_has_state_religion = rel:hindu }
+		ig:ig_devout = { set_interest_group_name = ig_hindu_priesthood }
+	} else_if = {
+		limit = { country_has_state_religion = rel:jewish }
+		ig:ig_devout = { set_interest_group_name = ig_rabbinical_council }
+	} else_if = {
+		limit = { country_has_state_religion = rel:mahayana }
+		if = {
+			limit = { ccrr_tag = { TAG = "JAP" } }
+			ig:ig_devout = { set_interest_group_name = ig_buddhist_monks }
+		} else_if = {
+			limit = {
+				OR = {
+					ccrr_tag = { TAG = "CHI" }
+					ccrr_tag = { TAG = "KOR" }
+				}
+			}
+			ig:ig_devout = { set_interest_group_name = ig_confucian }
+		} else = {
+			ig:ig_devout = { set_interest_group_name = ig_mahayana_monks }
+		}
+	} else_if = {
+		limit = { country_has_state_religion = rel:oriental_orthodox }
+		ig:ig_devout = { set_interest_group_name = ig_oriental_orthodox_church }
+	} else_if = {
+		limit = { country_has_state_religion = rel:orthodox }
+		ig:ig_devout = { set_interest_group_name = ig_orthodox_church }
+	} else_if = {
+		limit = { country_has_state_religion = rel:protestant }
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						exists = c:GBR
+						c:GBR = { country_has_state_religion = rel:protestant }
+					}
+					AND = {
+						exists = c:ENG
+						c:ENG = { country_has_state_religion = rel:protestant }
+					}
+				}
+				OR = {
+					is_subject_of = c:GBR
+					is_subject_of = c:ENG
+					ccrr_tag = { TAG = "GBR" }
+					ccrr_tag = { TAG = "ENG" }
+					ccrr_tag = { TAG = "SCO" }
+					ccrr_tag = { TAG = "WLS" }
+					ccrr_tag = { TAG = "ULS" }
+					ccrr_tag = { TAG = "AST" }
+					ccrr_tag = { TAG = "NSW" }
+					ccrr_tag = { TAG = "SAS" }
+					ccrr_tag = { TAG = "TAS" }
+					ccrr_tag = { TAG = "WAS" }
+					ccrr_tag = { TAG = "UNT" }
+					ccrr_tag = { TAG = "NZL" }
+					ccrr_tag = { TAG = "CAN" }
+					ccrr_tag = { TAG = "HBC" }
+					ccrr_tag = { TAG = "NEW" }
+					ccrr_tag = { TAG = "ONT" }
+					ccrr_tag = { TAG = "QUE" }
+					ccrr_tag = { TAG = "NBS" }
+					ccrr_tag = { TAG = "NVS" }
+					ccrr_tag = { TAG = "COL" }
+					ccrr_tag = { TAG = "ORG" }
+					ccrr_tag = { TAG = "JAM" }
+					ccrr_tag = { TAG = "BAH" }
+					ccrr_tag = { TAG = "WIN" }
+					ccrr_tag = { TAG = "SIL" }
+					ccrr_tag = { TAG = "SAF" }
+					ccrr_tag = { TAG = "BIC" }
+					ccrr_tag = { TAG = "NRU" }
+				}
+			}
+			ig:ig_devout = { set_interest_group_name = ig_anglican_church }
+		} else_if = {
+			limit = { ccrr_tag = { TAG = "HAW" } }
+			ig:ig_devout = { set_interest_group_name = ig_christian_missionaries }
+		} else_if = {
+			limit = {
+				exists = c:SWE
+				OR = {
+					c:SWE = ROOT
+					AND = {
+						c:SWE = { country_has_state_religion = rel:protestant }
+						is_subject_of = c:SWE
+					}
+				}
+			}
+			ig:ig_devout = { set_interest_group_name = ig_church_of_sweden }
+		} else_if = {
+			limit = { ccrr_tag = { TAG = "TPG" } }
+			ig:ig_devout = { set_interest_group_name = ig_taiping_god_worshippers }
+		} else_if = {
+			limit = { ccrr_tag = { TAG = "USA" } }
+			ig:ig_devout = { set_interest_group_name = ig_evangelicals }
+		} else = {
+			ig:ig_devout = { set_interest_group_name = ig_evangelical_church }
+		}
+	} else_if = {
+		limit = { country_has_state_religion = rel:shiite }
+		ig:ig_devout = { set_interest_group_name = ig_shia_madrasahs }
+	} else_if = {
+		limit = { country_has_state_religion = rel:shinto }
+		ig:ig_devout = { set_interest_group_name = ig_shinto_monks }
+	} else_if = {
+		limit = { country_has_state_religion = rel:sikh }
+		ig:ig_devout = { set_interest_group_name = ig_sikh_priesthood }
+	} else_if = {
+		limit = { country_has_state_religion = rel:sunni }
+		ig:ig_devout = { set_interest_group_name = ig_sunni_madrasahs }
+	} else_if = {
+		limit = { country_has_state_religion = rel:theravada }
+		ig:ig_devout = { set_interest_group_name = ig_theravada_monks }
+	}
+}
+
+ccrr_ig_devout_update = {
+	ccrr_ig_devout_remove_ideology = yes
+	ccrr_ig_devout_set_piousness = yes
+	ccrr_ig_devout_set_morality = yes
+	ccrr_ig_devout_set_patriarchy = yes
+	ccrr_ig_devout_set_name = yes
+}
+
+ccrr_update_characters = {
+	every_scope_character = {
+		limit = { has_variable = ccr_character_modified }
+		remove_variable = ccr_character_modified
+	}
+	
+	hidden_effect = {
+		random_primary_culture = { save_scope_as = ccr_newchar_culture }
+		
+		ig:ig_devout = {
+			leader = {
+				kill_character = {
+					hidden = yes
+					value = yes
+				}
+			}
+		}
+		
+		create_character = {
+			ig_leader = yes
+			interest_group = ig_devout
+			culture = scope:ccr_newchar_culture
+			religion = ROOT.var:ccr_new_religion
+			historical = no
+			female = no
+		}
+	}
+}
+
+ccr_generate_culture_data = {
+	cu:aborigine = { save_scope_as = ccr_aborigine }
+	cu:afar = { save_scope_as = ccr_afar }
+	cu:afro_american = { save_scope_as = ccr_afro_american }
+	cu:afro_antillean = { save_scope_as = ccr_afro_antillean }
+	cu:afro_brazilian = { save_scope_as = ccr_afro_brazilian }
+	cu:afro_caribbean = { save_scope_as = ccr_afro_caribbean }
+	cu:afro_caribeno = { save_scope_as = ccr_afro_caribeno }
+	cu:aimara = { save_scope_as = ccr_aimara }
+	cu:ainu = { save_scope_as = ccr_ainu }
+	cu:akan = { save_scope_as = ccr_akan }
+	cu:albanian = { save_scope_as = ccr_albanian }
+	cu:alemannic = { save_scope_as = ccr_alemannic }
+	cu:algonquian = { save_scope_as = ccr_algonquian }
+	cu:amazonian = { save_scope_as = ccr_amazonian }
+	cu:amhara = { save_scope_as = ccr_amhara }
+	cu:anglo_canadian = { save_scope_as = ccr_anglo_canadian }
+	cu:apache = { save_scope_as = ccr_apache }
+	cu:armenian = { save_scope_as = ccr_armenian }
+	cu:ashkenazi = { save_scope_as = ccr_ashkenazi }
+	cu:assamese = { save_scope_as = ccr_assamese }
+	cu:assyrian = { save_scope_as = ccr_assyrian }
+	cu:athabaskan = { save_scope_as = ccr_athabaskan }
+	cu:australian = { save_scope_as = ccr_australian }
+	cu:avadhi = { save_scope_as = ccr_avadhi }
+	cu:azande = { save_scope_as = ccr_azande }
+	cu:azerbaijani = { save_scope_as = ccr_azerbaijani }
+	cu:baganda = { save_scope_as = ccr_baganda }
+	cu:baguirmi = { save_scope_as = ccr_baguirmi }
+	cu:bakongo = { save_scope_as = ccr_bakongo }
+	cu:balinese = { save_scope_as = ccr_balinese }
+	cu:baluchi = { save_scope_as = ccr_baluchi }
+	cu:bambara = { save_scope_as = ccr_bambara }
+	cu:basque = { save_scope_as = ccr_basque }
+	cu:bassa = { save_scope_as = ccr_bassa }
+	cu:batak = { save_scope_as = ccr_batak }
+	cu:bedouin = { save_scope_as = ccr_bedouin }
+	cu:beja = { save_scope_as = ccr_beja }
+	cu:bengali = { save_scope_as = ccr_bengali }
+	cu:berber = { save_scope_as = ccr_berber }
+	cu:bidan = { save_scope_as = ccr_bidan }
+	cu:bihari = { save_scope_as = ccr_bihari }
+	cu:boer = { save_scope_as = ccr_boer }
+	cu:bornean = { save_scope_as = ccr_bornean }
+	cu:bosniak = { save_scope_as = ccr_bosniak }
+	cu:brazilian = { save_scope_as = ccr_brazilian }
+	cu:breton = { save_scope_as = ccr_breton }
+	cu:british = { save_scope_as = ccr_british }
+	cu:bulgarian = { save_scope_as = ccr_bulgarian }
+	cu:burmese = { save_scope_as = ccr_burmese }
+	cu:byelorussian = { save_scope_as = ccr_byelorussian }
+	cu:caddoan = { save_scope_as = ccr_caddoan }
+	cu:cajun = { save_scope_as = ccr_cajun }
+	cu:cariban = { save_scope_as = ccr_cariban }
+	cu:caribeno = { save_scope_as = ccr_caribeno }
+	cu:catalan = { save_scope_as = ccr_catalan }
+	cu:central_american = { save_scope_as = ccr_central_american }
+	cu:cherokee = { save_scope_as = ccr_cherokee }
+	cu:chewa = { save_scope_as = ccr_chewa }
+	cu:circassian = { save_scope_as = ccr_circassian }
+	cu:comanche = { save_scope_as = ccr_comanche }
+	cu:corsican = { save_scope_as = ccr_corsican }
+	cu:cree = { save_scope_as = ccr_cree }
+	cu:croat = { save_scope_as = ccr_croat }
+	cu:czech = { save_scope_as = ccr_czech }
+	cu:dakota = { save_scope_as = ccr_dakota }
+	cu:danish = { save_scope_as = ccr_danish }
+	cu:dayak = { save_scope_as = ccr_dayak }
+	cu:dinka = { save_scope_as = ccr_dinka }
+	cu:dixie = { save_scope_as = ccr_dixie }
+	cu:dutch = { save_scope_as = ccr_dutch }
+	cu:dyula = { save_scope_as = ccr_dyula }
+	cu:edo = { save_scope_as = ccr_edo }
+	cu:equatorial_bantu = { save_scope_as = ccr_equatorial_bantu }
+	cu:estonian = { save_scope_as = ccr_estonian }
+	cu:ewe = { save_scope_as = ccr_ewe }
+	cu:fang = { save_scope_as = ccr_fang }
+	cu:filipino = { save_scope_as = ccr_filipino }
+	cu:finnish = { save_scope_as = ccr_finnish }
+	cu:flemish = { save_scope_as = ccr_flemish }
+	cu:fluvian_bantu = { save_scope_as = ccr_fluvian_bantu }
+	cu:fon = { save_scope_as = ccr_fon }
+	cu:franco_canadian = { save_scope_as = ccr_franco_canadian }
+	cu:francoprovencal = { save_scope_as = ccr_francoprovencal }
+	cu:french = { save_scope_as = ccr_french }
+	cu:fulbe = { save_scope_as = ccr_fulbe }
+	cu:fur = { save_scope_as = ccr_fur }
+	cu:galician = { save_scope_as = ccr_galician }
+	cu:georgian = { save_scope_as = ccr_georgian }
+	cu:greek = { save_scope_as = ccr_greek }
+	cu:guajiro = { save_scope_as = ccr_guajiro }
+	cu:guarani = { save_scope_as = ccr_guarani }
+	cu:gujarati = { save_scope_as = ccr_gujarati }
+	cu:hakka = { save_scope_as = ccr_hakka }
+	cu:han = { save_scope_as = ccr_han }
+	cu:haratin = { save_scope_as = ccr_haratin }
+	cu:hausa = { save_scope_as = ccr_hausa }
+	cu:hawaiian = { save_scope_as = ccr_hawaiian }
+	cu:hazara = { save_scope_as = ccr_hazara }
+	cu:herero = { save_scope_as = ccr_herero }
+	cu:hokan = { save_scope_as = ccr_hokan }
+	cu:hungarian = { save_scope_as = ccr_hungarian }
+	cu:ibibio = { save_scope_as = ccr_ibibio }
+	cu:ibo = { save_scope_as = ccr_ibo }
+	cu:icelandic = { save_scope_as = ccr_icelandic }
+	cu:inuit = { save_scope_as = ccr_inuit }
+	cu:irish = { save_scope_as = ccr_irish }
+	cu:iroquoian = { save_scope_as = ccr_iroquoian }
+	cu:japanese = { save_scope_as = ccr_japanese }
+	cu:javan = { save_scope_as = ccr_javan }
+	cu:kachin = { save_scope_as = ccr_kachin }
+	cu:kalmyk = { save_scope_as = ccr_kalmyk }
+	cu:kanauji = { save_scope_as = ccr_kanauji }
+	cu:kannada = { save_scope_as = ccr_kannada }
+	cu:kanuri = { save_scope_as = ccr_kanuri }
+	cu:karen = { save_scope_as = ccr_karen }
+	cu:kashmiri = { save_scope_as = ccr_kashmiri }
+	cu:kavango_bantu = { save_scope_as = ccr_kavango_bantu }
+	cu:kazak = { save_scope_as = ccr_kazak }
+	cu:khmer = { save_scope_as = ccr_khmer }
+	cu:khmu = { save_scope_as = ccr_khmu }
+	cu:khoisan = { save_scope_as = ccr_khoisan }
+	cu:kikuyu = { save_scope_as = ccr_kikuyu }
+	cu:kissi = { save_scope_as = ccr_kissi }
+	cu:korean = { save_scope_as = ccr_korean }
+	cu:kru = { save_scope_as = ccr_kru }
+	cu:kurdish = { save_scope_as = ccr_kurdish }
+	cu:kirgiz = { save_scope_as = ccr_kirgiz }
+	cu:lacustrine_bantu = { save_scope_as = ccr_lacustrine_bantu }
+	cu:lao = { save_scope_as = ccr_lao }
+	cu:latvian = { save_scope_as = ccr_latvian }
+	cu:lithuanian = { save_scope_as = ccr_lithuanian }
+	cu:lomwe = { save_scope_as = ccr_lomwe }
+	cu:luba = { save_scope_as = ccr_luba }
+	cu:lunda = { save_scope_as = ccr_lunda }
+	cu:luo = { save_scope_as = ccr_luo }
+	cu:maasai = { save_scope_as = ccr_maasai }
+	cu:maghrebi = { save_scope_as = ccr_maghrebi }
+	cu:makua = { save_scope_as = ccr_makua }
+	cu:malagasy = { save_scope_as = ccr_malagasy }
+	cu:malay = { save_scope_as = ccr_malay }
+	cu:malayalam = { save_scope_as = ccr_malayalam }
+	cu:maltese = { save_scope_as = ccr_maltese }
+	cu:manchu = { save_scope_as = ccr_manchu }
+	cu:mande = { save_scope_as = ccr_mande }
+	cu:manipuri = { save_scope_as = ccr_manipuri }
+	cu:maori = { save_scope_as = ccr_maori }
+	cu:marathi = { save_scope_as = ccr_marathi }
+	cu:mashriqi = { save_scope_as = ccr_mashriqi }
+	cu:mayan = { save_scope_as = ccr_mayan }
+	cu:melanesian = { save_scope_as = ccr_melanesian }
+	cu:metis = { save_scope_as = ccr_metis }
+	cu:mexican = { save_scope_as = ccr_mexican }
+	cu:miao = { save_scope_as = ccr_miao }
+	cu:micronesian = { save_scope_as = ccr_micronesian }
+	cu:min = { save_scope_as = ccr_min }
+	cu:miskito = { save_scope_as = ccr_miskito }
+	cu:misri = { save_scope_as = ccr_misri }
+	cu:mixtec = { save_scope_as = ccr_mixtec }
+	cu:moluccan = { save_scope_as = ccr_moluccan }
+	cu:mon = { save_scope_as = ccr_mon }
+	cu:mongo = { save_scope_as = ccr_mongo }
+	cu:mongol = { save_scope_as = ccr_mongol }
+	cu:moro = { save_scope_as = ccr_moro }
+	cu:mossi = { save_scope_as = ccr_mossi }
+	cu:muisca = { save_scope_as = ccr_muisca }
+	cu:muskogean = { save_scope_as = ccr_muskogean }
+	cu:nahua = { save_scope_as = ccr_nahua }
+	cu:navajo = { save_scope_as = ccr_navajo }
+	cu:nepali = { save_scope_as = ccr_nepali }
+	cu:nez_perce = { save_scope_as = ccr_nez_perce }
+	cu:nguni = { save_scope_as = ccr_nguni }
+	cu:nilotic = { save_scope_as = ccr_nilotic }
+	cu:north_andean = { save_scope_as = ccr_north_andean }
+	cu:north_caucasian = { save_scope_as = ccr_north_caucasian }
+	cu:north_german = { save_scope_as = ccr_north_german }
+	cu:north_italian = { save_scope_as = ccr_north_italian }
+	cu:norwegian = { save_scope_as = ccr_norwegian }
+	cu:nuba = { save_scope_as = ccr_nuba }
+	cu:nuer = { save_scope_as = ccr_nuer }
+	cu:occitan = { save_scope_as = ccr_occitan }
+	cu:oodham = { save_scope_as = ccr_oodham }
+	cu:oriya = { save_scope_as = ccr_oriya }
+	cu:oromo = { save_scope_as = ccr_oromo }
+	cu:ovimbundu = { save_scope_as = ccr_ovimbundu }
+	cu:paiute = { save_scope_as = ccr_paiute }
+	cu:panjabi = { save_scope_as = ccr_panjabi }
+	cu:pashtun = { save_scope_as = ccr_pashtun }
+	cu:patagonian = { save_scope_as = ccr_patagonian }
+	cu:persian = { save_scope_as = ccr_persian }
+	cu:platinean = { save_scope_as = ccr_platinean }
+	cu:polish = { save_scope_as = ccr_polish }
+	cu:polynesian = { save_scope_as = ccr_polynesian }
+	cu:portuguese = { save_scope_as = ccr_portuguese }
+	cu:pueblo = { save_scope_as = ccr_pueblo }
+	cu:quechua = { save_scope_as = ccr_quechua }
+	cu:rajput = { save_scope_as = ccr_rajput }
+	cu:romanian = { save_scope_as = ccr_romanian }
+	cu:ruanda = { save_scope_as = ccr_ruanda }
+	cu:rundi = { save_scope_as = ccr_rundi }
+	cu:russian = { save_scope_as = ccr_russian }
+	cu:salish = { save_scope_as = ccr_salish }
+	cu:sami = { save_scope_as = ccr_sami }
+	cu:sara = { save_scope_as = ccr_sara }
+	cu:scottish = { save_scope_as = ccr_scottish }
+	cu:sena = { save_scope_as = ccr_sena }
+	cu:senufo = { save_scope_as = ccr_senufo }
+	cu:sephardic = { save_scope_as = ccr_sephardic }
+	cu:serb = { save_scope_as = ccr_serb }
+	cu:shan = { save_scope_as = ccr_shan }
+	cu:shona = { save_scope_as = ccr_shona }
+	cu:siberian = { save_scope_as = ccr_siberian }
+	cu:sidama = { save_scope_as = ccr_sidama }
+	cu:sindi = { save_scope_as = ccr_sindi }
+	cu:sinhala = { save_scope_as = ccr_sinhala }
+	cu:siouan = { save_scope_as = ccr_siouan }
+	cu:slovak = { save_scope_as = ccr_slovak }
+	cu:slovene = { save_scope_as = ccr_slovene }
+	cu:somali = { save_scope_as = ccr_somali }
+	cu:songhai = { save_scope_as = ccr_songhai }
+	cu:sorb = { save_scope_as = ccr_sorb }
+	cu:sotho = { save_scope_as = ccr_sotho }
+	cu:south_andean = { save_scope_as = ccr_south_andean }
+	cu:south_german = { save_scope_as = ccr_south_german }
+	cu:south_italian = { save_scope_as = ccr_south_italian }
+	cu:spanish = { save_scope_as = ccr_spanish }
+	cu:sudanese = { save_scope_as = ccr_sudanese }
+	cu:sukuma = { save_scope_as = ccr_sukuma }
+	cu:sumatran = { save_scope_as = ccr_sumatran }
+	cu:swahili = { save_scope_as = ccr_swahili }
+	cu:swedish = { save_scope_as = ccr_swedish }
+	cu:tajik = { save_scope_as = ccr_tajik }
+	cu:tamil = { save_scope_as = ccr_tamil }
+	cu:tarascan = { save_scope_as = ccr_tarascan }
+	cu:tatar = { save_scope_as = ccr_tatar }
+	cu:teda = { save_scope_as = ccr_teda }
+	cu:telegu = { save_scope_as = ccr_telegu }
+	cu:thai = { save_scope_as = ccr_thai }
+	cu:tibetan = { save_scope_as = ccr_tibetan }
+	cu:tigray = { save_scope_as = ccr_tigray }
+	cu:tiv = { save_scope_as = ccr_tiv }
+	cu:tonga = { save_scope_as = ccr_tonga }
+	cu:tswana = { save_scope_as = ccr_tswana }
+	cu:tuareg = { save_scope_as = ccr_tuareg }
+	cu:tupinamba = { save_scope_as = ccr_tupinamba }
+	cu:turkish = { save_scope_as = ccr_turkish }
+	cu:turkmen = { save_scope_as = ccr_turkmen }
+	cu:tuvan = { save_scope_as = ccr_tuvan }
+	cu:ugrian = { save_scope_as = ccr_ugrian }
+	cu:uighur = { save_scope_as = ccr_uighur }
+	cu:ukrainian = { save_scope_as = ccr_ukrainian }
+	cu:unyamwezi = { save_scope_as = ccr_unyamwezi }
+	cu:uzbek = { save_scope_as = ccr_uzbek }
+	cu:vietnamese = { save_scope_as = ccr_vietnamese }
+	cu:wallonian = { save_scope_as = ccr_wallonian }
+	cu:welsh = { save_scope_as = ccr_welsh }
+	cu:wolof = { save_scope_as = ccr_wolof }
+	cu:xhosa = { save_scope_as = ccr_xhosa }
+	cu:yakut = { save_scope_as = ccr_yakut }
+	cu:yankee = { save_scope_as = ccr_yankee }
+	cu:yao = { save_scope_as = ccr_yao }
+	cu:yemenite = { save_scope_as = ccr_yemenite }
+	cu:yi = { save_scope_as = ccr_yi }
+	cu:yoruba = { save_scope_as = ccr_yoruba }
+	cu:yuanzhumin = { save_scope_as = ccr_yuanzhumin }
+	cu:yue = { save_scope_as = ccr_yue }
+	cu:zapotec = { save_scope_as = ccr_zapotec }
+	cu:zhuang = { save_scope_as = ccr_zhuang }
+	cu:zulu = { save_scope_as = ccr_zulu }
+	cu:afghan = { save_scope_as = ccr_afghan }
+	
+# CCRSYN: Syncretic Cultures Cultures
+	cu:afghan = { save_scope_as = ccr_afghan }
+	cu:anglosphere = { save_scope_as = ccr_anglosphere }
+	cu:arabian = { save_scope_as = ccr_arabian }
+	cu:austro_hungarian = { save_scope_as = ccr_austro_hungarian }
+	cu:baltic = { save_scope_as = ccr_baltic }
+	cu:byzantine = { save_scope_as = ccr_byzantine }
+	cu:canadian = { save_scope_as = ccr_canadian }
+	cu:caucasian_culture = { save_scope_as = ccr_caucasian_culture }
+	cu:celtic_culture = { save_scope_as = ccr_celtic_culture }
+	cu:central_african_culture = { save_scope_as = ccr_central_african_culture }
+	cu:chinese = { save_scope_as = ccr_chinese }
+	cu:czecho_slovak = { save_scope_as = ccr_czecho_slovak }
+	cu:dravidian_culture = { save_scope_as = ccr_dravidian_culture }
+	cu:east_aryan = { save_scope_as = ccr_east_aryan }
+	cu:eastern_african_culture = { save_scope_as = ccr_eastern_african_culture }
+	cu:ethiopian_culture = { save_scope_as = ccr_ethiopian_culture }
+	cu:european_american = { save_scope_as = ccr_european_american }
+	cu:finnic_culture = { save_scope_as = ccr_finnic_culture }
+	cu:german = { save_scope_as = ccr_german }
+	cu:germanic = { save_scope_as = ccr_germanic }
+	cu:gran_colombian = { save_scope_as = ccr_gran_colombian }
+	cu:hindustani_culture = { save_scope_as = ccr_hindustani_culture }
+	cu:hispanic = { save_scope_as = ccr_hispanic }
+	cu:iberian = { save_scope_as = ccr_iberian }
+	cu:iberic = { save_scope_as = ccr_iberic }
+	cu:indian = { save_scope_as = ccr_indian }
+	cu:indo_aryan_culture = { save_scope_as = ccr_indo_aryan_culture }
+	cu:iranian = { save_scope_as = ccr_iranian }
+	cu:israeli = { save_scope_as = ccr_israeli }
+	cu:italian = { save_scope_as = ccr_italian }
+	cu:latino = { save_scope_as = ccr_latino }
+	cu:malayan = { save_scope_as = ccr_malayan }
+	cu:modern_brazilian = { save_scope_as = ccr_modern_brazilian }
+	cu:modern_british = { save_scope_as = ccr_modern_british }
+	cu:modern_burmese = { save_scope_as = ccr_modern_burmese }
+	cu:modern_french = { save_scope_as = ccr_modern_french }
+	cu:modern_japanese = { save_scope_as = ccr_modern_japanese }
+	cu:modern_korean = { save_scope_as = ccr_modern_korean }
+	cu:modern_mexican = { save_scope_as = ccr_modern_mexican }
+	cu:modern_portuguese = { save_scope_as = ccr_modern_portuguese }
+	cu:modern_spanish = { save_scope_as = ccr_modern_spanish }
+	cu:native_american = { save_scope_as = ccr_native_american }
+	cu:netherlandic = { save_scope_as = ccr_netherlandic }
+	cu:polish_lithuanian = { save_scope_as = ccr_polish_lithuanian }
+	cu:polynesian_culture = { save_scope_as = ccr_polynesian_culture }
+	cu:porto_brazilian = { save_scope_as = ccr_porto_brazilian }
+	cu:romance = { save_scope_as = ccr_romance }
+	cu:rus = { save_scope_as = ccr_rus }
+	cu:scandinavian = { save_scope_as = ccr_scandinavian }
+	cu:southern_african_culture = { save_scope_as = ccr_southern_african_culture }
+	cu:sub_saharan_african = { save_scope_as = ccr_sub_saharan_african }
+	cu:swiss_culture = { save_scope_as = ccr_swiss_culture }
+	cu:tai_culture = { save_scope_as = ccr_tai_culture }
+	cu:taiwanese = { save_scope_as = ccr_taiwanese }
+	cu:turkic_culture = { save_scope_as = ccr_turkic_culture }
+	cu:us_american = { save_scope_as = ccr_us_american }
+	cu:west_aryan = { save_scope_as = ccr_west_aryan }
+	cu:west_slavic_culture = { save_scope_as = ccr_west_slavic_culture }
+	cu:western_african_culture = { save_scope_as = ccr_western_african_culture }
+	cu:yugoslavian = { save_scope_as = ccr_yugoslavian }
+	
+# CCDIV Divergences Cultures
+	cu:afro_amerigan = { save_scope_as = ccr_afro_amerigan }
+	cu:afro_frankish = { save_scope_as = ccr_afro_frankish }
+	cu:afro_germanic = { save_scope_as = ccr_afro_germanic }
+	cu:afro_latino = { save_scope_as = ccr_afro_latino }
+	cu:amazonian = { save_scope_as = ccr_amazonian }
+	cu:amazonien = { save_scope_as = ccr_amazonien }
+	cu:caladeran = { save_scope_as = ccr_caladeran }
+	cu:anglois = { save_scope_as = ccr_anglois }
+	cu:athesian = { save_scope_as = ccr_athesian }
+	cu:atlantian = { save_scope_as = ccr_atlantian }
+	cu:balters = { save_scope_as = ccr_balters }
+	cu:bashkir = { save_scope_as = ccr_bashkir }
+	cu:bastaard = { save_scope_as = ccr_bastaard }
+	cu:belgian = { save_scope_as = ccr_belgian }
+	cu:beornian = { save_scope_as = ccr_beornian }
+	cu:czech = { save_scope_as = ccr_czech }
+	cu:burgundian = { save_scope_as = ccr_burgundian }
+	cu:spanish = { save_scope_as = ccr_spanish }
+	cu:central_italian = { save_scope_as = ccr_central_italian }
+	cu:cham = { save_scope_as = ccr_cham }
+	cu:filipino = { save_scope_as = ccr_filipino }
+	cu:south_german = { save_scope_as = ccr_south_german }
+	cu:north_german = { save_scope_as = ccr_north_german }
+	cu:boer = { save_scope_as = ccr_boer }
+	cu:granadan = { save_scope_as = ccr_granadan }
+	cu:guianan = { save_scope_as = ccr_guianan }
+	cu:aborigine = { save_scope_as = ccr_aborigine }
+	cu:kaiganese = { save_scope_as = ccr_kaiganese }
+	cu:kazani = { save_scope_as = ccr_kazani }
+	cu:kirim = { save_scope_as = ccr_kirim }
+	cu:ayitian = { save_scope_as = ccr_ayitian }
+	cu:krymchak = { save_scope_as = ccr_krymchak }
+	cu:lotharian = { save_scope_as = ccr_lotharian }
+	cu:lusitanian = { save_scope_as = ccr_lusitanian }
+	cu:maori = { save_scope_as = ccr_maori }
+	cu:navarragon = { save_scope_as = ccr_navarragon }
+	cu:north_russian = { save_scope_as = ccr_north_russian }
+	cu:plantagenian = { save_scope_as = ccr_plantagenian }
+	cu:galician = { save_scope_as = ccr_galician }
+	cu:occitan = { save_scope_as = ccr_occitan }
+	cu:qingqiuan = { save_scope_as = ccr_qingqiuan }
+	cu:rheinish = { save_scope_as = ccr_rheinish }
+	cu:rohnnst = { save_scope_as = ccr_rohnnst }
+	cu:romand = { save_scope_as = ccr_romand }
+	cu:central_american = { save_scope_as = ccr_central_american }
+	cu:sardinian = { save_scope_as = ccr_sardinian }
+	cu:scandinavian = { save_scope_as = ccr_scandinavian }
+	cu:sibir = { save_scope_as = ccr_sibir }
+	cu:portuguese = { save_scope_as = ccr_portuguese }
+	cu:syriac = { save_scope_as = ccr_syriac }
+	cu:russian = { save_scope_as = ccr_russian }
+	cu:venetian = { save_scope_as = ccr_venetian }
+	cu:vinlander = { save_scope_as = ccr_vinlander }
+	cu:xacitarxani = { save_scope_as = ccr_xacitarxani }
+	cu:zhourao = { save_scope_as = ccr_zhourao }
+
+#CCVFM Victorian Flavor Mod
+	cu:anglo_indian = { save_scope_as = ccr_anglo_indian }
+	cu:antillianen = { save_scope_as = ccr_antillianen }
+	cu:baltic_german = { save_scope_as = ccr_baltic_german }
+	cu:erzyan = { save_scope_as = ccr_erzyan }
+	cu:estonian = { save_scope_as = ccr_estonian }
+	cu:finnish = { save_scope_as = ccr_finnish }
+	cu:frisian = { save_scope_as = ccr_frisian }
+	cu:griqua = { save_scope_as = ccr_griqua }
+	cu:indo = { save_scope_as = ccr_indo }
+	cu:izhorian = { save_scope_as = ccr_izhorian }
+	cu:karelian = { save_scope_as = ccr_karelian }
+	cu:komi = { save_scope_as = ccr_komi }
+	cu:limburgish = { save_scope_as = ccr_limburgish }
+	cu:luxembourgish = { save_scope_as = ccr_luxembourgish }
+	cu:mari = { save_scope_as = ccr_mari }
+	cu:mokshan = { save_scope_as = ccr_mokshan }
+	cu:obugric = { save_scope_as = ccr_obugric }
+	cu:romani = { save_scope_as = ccr_romani }
+	cu:ryukyan = { save_scope_as = ccr_ryukyan }
+	cu:sami = { save_scope_as = ccr_sami }
+	cu:samoyedic = { save_scope_as = ccr_samoyedic }
+	cu:udmurt = { save_scope_as = ccr_udmurt }
+	cu:voortrekker = { save_scope_as = ccr_voortrekker }
+
+}
+
+ccr_generate_religion_data = {
+	rel:animist = { save_scope_as = ccr_animist }
+	rel:atheist = { save_scope_as = ccr_atheist }
+	rel:catholic = { save_scope_as = ccr_catholic }
+	rel:gelugpa = { save_scope_as = ccr_gelugpa }
+	rel:hindu = { save_scope_as = ccr_hindu }
+	rel:jewish = { save_scope_as = ccr_jewish }
+	rel:mahayana = { save_scope_as = ccr_mahayana }
+	rel:oriental_orthodox = { save_scope_as = ccr_oriental_orthodox }
+	rel:orthodox = { save_scope_as = ccr_orthodox }
+	rel:protestant = { save_scope_as = ccr_protestant }
+	rel:shiite = { save_scope_as = ccr_shiite }
+	rel:shinto = { save_scope_as = ccr_shinto }
+	rel:sikh = { save_scope_as = ccr_sikh }
+	rel:sunni = { save_scope_as = ccr_sunni }
+	rel:theravada = { save_scope_as = ccr_theravada }
+	rel:protestant = { save_scope_as = ccr_protestant }
+	
+#CCMF2 More Faiths v2 Relgions
+	rel:akom = { save_scope_as = ccr_akom }
+	rel:anglican = { save_scope_as = ccr_anglican }
+	rel:bantu_faith = { save_scope_as = ccr_bantu_faith }
+	rel:bon = { save_scope_as = ccr_bon }
+	rel:bori = { save_scope_as = ccr_bori }
+	rel:chinese_pagan = { save_scope_as = ccr_chinese_pagan }
+	rel:confucianism = { save_scope_as = ccr_confucianism }
+	rel:donyi_polo = { save_scope_as = ccr_donyi_polo }
+	rel:dreamtime = { save_scope_as = ccr_dreamtime }
+	rel:eskaleut = { save_scope_as = ccr_eskaleut }
+	rel:hellenism = { save_scope_as = ccr_hellenism }
+	rel:indonesian = { save_scope_as = ccr_indonesian }
+	rel:inti = { save_scope_as = ccr_inti }
+	rel:jain = { save_scope_as = ccr_jain }
+	rel:kemetism = { save_scope_as = ccr_kemetism }
+	rel:kushitic = { save_scope_as = ccr_kushitic }
+	rel:maasai_faith = { save_scope_as = ccr_maasai_faith }
+	rel:malagasy_faith = { save_scope_as = ccr_malagasy_faith }
+	rel:mande_faith = { save_scope_as = ccr_mande_faith }
+	rel:mayan_faith = { save_scope_as = ccr_mayan_faith }
+	rel:mazdayasna = { save_scope_as = ccr_mazdayasna }
+	rel:mormon = { save_scope_as = ccr_mormon }
+	rel:nahuatl = { save_scope_as = ccr_nahuatl }
+	rel:orisa_faith = { save_scope_as = ccr_orisa_faith }
+	rel:polynesian_faith = { save_scope_as = ccr_polynesian_faith }
+	rel:roogan = { save_scope_as = ccr_roogan }
+	rel:san_faith = { save_scope_as = ccr_san_faith }
+	rel:siberian_faith = { save_scope_as = ccr_siberian_faith }
+	rel:south_american = { save_scope_as = ccr_south_american }
+	rel:suomenusko = { save_scope_as = ccr_suomenusko }
+	rel:tai_faith = { save_scope_as = ccr_tai_faith }
+	rel:taiping = { save_scope_as = ccr_taiping }
+	rel:taoism = { save_scope_as = ccr_taoism }
+	rel:tengriism = { save_scope_as = ccr_tengriism }
+	rel:totemism = { save_scope_as = ccr_totemism }
+	rel:voodoo = { save_scope_as = ccr_voodoo }
+	rel:waaqeffanna = { save_scope_as = ccr_waaqeffanna }
+
+	
+
+}
+
+ccr_homelands_effect = {
+	scope:decree_ccr_target.state_region = {
+		if = {
+			limit = { cu:aborigine = { is_primary_culture_of = ROOT } }
+			add_homeland = aborigine
+		} else = { remove_homeland = aborigine }
+		if = {
+			limit = { cu:afar = { is_primary_culture_of = ROOT } }
+			add_homeland = afar
+		} else = { remove_homeland = afar }
+		if = {
+			limit = { cu:afro_american = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_american
+		} else = { remove_homeland = afro_american }
+		if = {
+			limit = { cu:afro_antillean = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_antillean
+		} else = { remove_homeland = afro_antillean }
+		if = {
+			limit = { cu:afro_brazilian = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_brazilian
+		} else = { remove_homeland = afro_brazilian }
+		if = {
+			limit = { cu:afro_caribbean = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_caribbean
+		} else = { remove_homeland = afro_caribbean }
+		if = {
+			limit = { cu:afro_caribeno = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_caribeno
+		} else = { remove_homeland = afro_caribeno }
+		if = {
+			limit = { cu:aimara = { is_primary_culture_of = ROOT } }
+			add_homeland = aimara
+		} else = { remove_homeland = aimara }
+		if = {
+			limit = { cu:ainu = { is_primary_culture_of = ROOT } }
+			add_homeland = ainu
+		} else = { remove_homeland = ainu }
+		if = {
+			limit = { cu:akan = { is_primary_culture_of = ROOT } }
+			add_homeland = akan
+		} else = { remove_homeland = akan }
+		if = {
+			limit = { cu:albanian = { is_primary_culture_of = ROOT } }
+			add_homeland = albanian
+		} else = { remove_homeland = albanian }
+		if = {
+			limit = { cu:alemannic = { is_primary_culture_of = ROOT } }
+			add_homeland = alemannic
+		} else = { remove_homeland = alemannic }
+		if = {
+			limit = { cu:algonquian = { is_primary_culture_of = ROOT } }
+			add_homeland = algonquian
+		} else = { remove_homeland = algonquian }
+		if = {
+			limit = { cu:amazonian = { is_primary_culture_of = ROOT } }
+			add_homeland = amazonian
+		} else = { remove_homeland = amazonian }
+		if = {
+			limit = { cu:amhara = { is_primary_culture_of = ROOT } }
+			add_homeland = amhara
+		} else = { remove_homeland = amhara }
+		if = {
+			limit = { cu:anglo_canadian = { is_primary_culture_of = ROOT } }
+			add_homeland = anglo_canadian
+		} else = { remove_homeland = anglo_canadian }
+		if = {
+			limit = { cu:apache = { is_primary_culture_of = ROOT } }
+			add_homeland = apache
+		} else = { remove_homeland = apache }
+		if = {
+			limit = { cu:armenian = { is_primary_culture_of = ROOT } }
+			add_homeland = armenian
+		} else = { remove_homeland = armenian }
+		if = {
+			limit = { cu:ashkenazi = { is_primary_culture_of = ROOT } }
+			add_homeland = ashkenazi
+		} else = { remove_homeland = ashkenazi }
+		if = {
+			limit = { cu:assamese = { is_primary_culture_of = ROOT } }
+			add_homeland = assamese
+		} else = { remove_homeland = assamese }
+		if = {
+			limit = { cu:assyrian = { is_primary_culture_of = ROOT } }
+			add_homeland = assyrian
+		} else = { remove_homeland = assyrian }
+		if = {
+			limit = { cu:athabaskan = { is_primary_culture_of = ROOT } }
+			add_homeland = athabaskan
+		} else = { remove_homeland = athabaskan }
+		if = {
+			limit = { cu:australian = { is_primary_culture_of = ROOT } }
+			add_homeland = australian
+		} else = { remove_homeland = australian }
+		if = {
+			limit = { cu:avadhi = { is_primary_culture_of = ROOT } }
+			add_homeland = avadhi
+		} else = { remove_homeland = avadhi }
+		if = {
+			limit = { cu:azande = { is_primary_culture_of = ROOT } }
+			add_homeland = azande
+		} else = { remove_homeland = azande }
+		if = {
+			limit = { cu:azerbaijani = { is_primary_culture_of = ROOT } }
+			add_homeland = azerbaijani
+		} else = { remove_homeland = azerbaijani }
+		if = {
+			limit = { cu:baganda = { is_primary_culture_of = ROOT } }
+			add_homeland = baganda
+		} else = { remove_homeland = baganda }
+		if = {
+			limit = { cu:baguirmi = { is_primary_culture_of = ROOT } }
+			add_homeland = baguirmi
+		} else = { remove_homeland = baguirmi }
+		if = {
+			limit = { cu:bakongo = { is_primary_culture_of = ROOT } }
+			add_homeland = bakongo
+		} else = { remove_homeland = bakongo }
+		if = {
+			limit = { cu:balinese = { is_primary_culture_of = ROOT } }
+			add_homeland = balinese
+		} else = { remove_homeland = balinese }
+		if = {
+			limit = { cu:baluchi = { is_primary_culture_of = ROOT } }
+			add_homeland = baluchi
+		} else = { remove_homeland = baluchi }
+		if = {
+			limit = { cu:bambara = { is_primary_culture_of = ROOT } }
+			add_homeland = bambara
+		} else = { remove_homeland = bambara }
+		if = {
+			limit = { cu:basque = { is_primary_culture_of = ROOT } }
+			add_homeland = basque
+		} else = { remove_homeland = basque }
+		if = {
+			limit = { cu:bassa = { is_primary_culture_of = ROOT } }
+			add_homeland = bassa
+		} else = { remove_homeland = bassa }
+		if = {
+			limit = { cu:batak = { is_primary_culture_of = ROOT } }
+			add_homeland = batak
+		} else = { remove_homeland = batak }
+		if = {
+			limit = { cu:bedouin = { is_primary_culture_of = ROOT } }
+			add_homeland = bedouin
+		} else = { remove_homeland = bedouin }
+		if = {
+			limit = { cu:beja = { is_primary_culture_of = ROOT } }
+			add_homeland = beja
+		} else = { remove_homeland = beja }
+		if = {
+			limit = { cu:bengali = { is_primary_culture_of = ROOT } }
+			add_homeland = bengali
+		} else = { remove_homeland = bengali }
+		if = {
+			limit = { cu:berber = { is_primary_culture_of = ROOT } }
+			add_homeland = berber
+		} else = { remove_homeland = berber }
+		if = {
+			limit = { cu:bidan = { is_primary_culture_of = ROOT } }
+			add_homeland = bidan
+		} else = { remove_homeland = bidan }
+		if = {
+			limit = { cu:bihari = { is_primary_culture_of = ROOT } }
+			add_homeland = bihari
+		} else = { remove_homeland = bihari }
+		if = {
+			limit = { cu:boer = { is_primary_culture_of = ROOT } }
+			add_homeland = boer
+		} else = { remove_homeland = boer }
+		if = {
+			limit = { cu:bornean = { is_primary_culture_of = ROOT } }
+			add_homeland = bornean
+		} else = { remove_homeland = bornean }
+		if = {
+			limit = { cu:bosniak = { is_primary_culture_of = ROOT } }
+			add_homeland = bosniak
+		} else = { remove_homeland = bosniak }
+		if = {
+			limit = { cu:brazilian = { is_primary_culture_of = ROOT } }
+			add_homeland = brazilian
+		} else = { remove_homeland = brazilian }
+		if = {
+			limit = { cu:breton = { is_primary_culture_of = ROOT } }
+			add_homeland = breton
+		} else = { remove_homeland = breton }
+		if = {
+			limit = { cu:british = { is_primary_culture_of = ROOT } }
+			add_homeland = british
+		} else = { remove_homeland = british }
+		if = {
+			limit = { cu:bulgarian = { is_primary_culture_of = ROOT } }
+			add_homeland = bulgarian
+		} else = { remove_homeland = bulgarian }
+		if = {
+			limit = { cu:burmese = { is_primary_culture_of = ROOT } }
+			add_homeland = burmese
+		} else = { remove_homeland = burmese }
+		if = {
+			limit = { cu:byelorussian = { is_primary_culture_of = ROOT } }
+			add_homeland = byelorussian
+		} else = { remove_homeland = byelorussian }
+		if = {
+			limit = { cu:caddoan = { is_primary_culture_of = ROOT } }
+			add_homeland = caddoan
+		} else = { remove_homeland = caddoan }
+		if = {
+			limit = { cu:cajun = { is_primary_culture_of = ROOT } }
+			add_homeland = cajun
+		} else = { remove_homeland = cajun }
+		if = {
+			limit = { cu:cariban = { is_primary_culture_of = ROOT } }
+			add_homeland = cariban
+		} else = { remove_homeland = cariban }
+		if = {
+			limit = { cu:caribeno = { is_primary_culture_of = ROOT } }
+			add_homeland = caribeno
+		} else = { remove_homeland = caribeno }
+		if = {
+			limit = { cu:catalan = { is_primary_culture_of = ROOT } }
+			add_homeland = catalan
+		} else = { remove_homeland = catalan }
+		if = {
+			limit = { cu:central_american = { is_primary_culture_of = ROOT } }
+			add_homeland = central_american
+		} else = { remove_homeland = central_american }
+		if = {
+			limit = { cu:cherokee = { is_primary_culture_of = ROOT } }
+			add_homeland = cherokee
+		} else = { remove_homeland = cherokee }
+		if = {
+			limit = { cu:chewa = { is_primary_culture_of = ROOT } }
+			add_homeland = chewa
+		} else = { remove_homeland = chewa }
+		if = {
+			limit = { cu:circassian = { is_primary_culture_of = ROOT } }
+			add_homeland = circassian
+		} else = { remove_homeland = circassian }
+		if = {
+			limit = { cu:comanche = { is_primary_culture_of = ROOT } }
+			add_homeland = comanche
+		} else = { remove_homeland = comanche }
+		if = {
+			limit = { cu:corsican = { is_primary_culture_of = ROOT } }
+			add_homeland = corsican
+		} else = { remove_homeland = corsican }
+		if = {
+			limit = { cu:cree = { is_primary_culture_of = ROOT } }
+			add_homeland = cree
+		} else = { remove_homeland = cree }
+		if = {
+			limit = { cu:croat = { is_primary_culture_of = ROOT } }
+			add_homeland = croat
+		} else = { remove_homeland = croat }
+		if = {
+			limit = { cu:czech = { is_primary_culture_of = ROOT } }
+			add_homeland = czech
+		} else = { remove_homeland = czech }
+		if = {
+			limit = { cu:dakota = { is_primary_culture_of = ROOT } }
+			add_homeland = dakota
+		} else = { remove_homeland = dakota }
+		if = {
+			limit = { cu:danish = { is_primary_culture_of = ROOT } }
+			add_homeland = danish
+		} else = { remove_homeland = danish }
+		if = {
+			limit = { cu:dayak = { is_primary_culture_of = ROOT } }
+			add_homeland = dayak
+		} else = { remove_homeland = dayak }
+		if = {
+			limit = { cu:dinka = { is_primary_culture_of = ROOT } }
+			add_homeland = dinka
+		} else = { remove_homeland = dinka }
+		if = {
+			limit = { cu:dixie = { is_primary_culture_of = ROOT } }
+			add_homeland = dixie
+		} else = { remove_homeland = dixie }
+		if = {
+			limit = { cu:dutch = { is_primary_culture_of = ROOT } }
+			add_homeland = dutch
+		} else = { remove_homeland = dutch }
+		if = {
+			limit = { cu:dyula = { is_primary_culture_of = ROOT } }
+			add_homeland = dyula
+		} else = { remove_homeland = dyula }
+		if = {
+			limit = { cu:edo = { is_primary_culture_of = ROOT } }
+			add_homeland = edo
+		} else = { remove_homeland = edo }
+		if = {
+			limit = { cu:equatorial_bantu = { is_primary_culture_of = ROOT } }
+			add_homeland = equatorial_bantu
+		} else = { remove_homeland = equatorial_bantu }
+		if = {
+			limit = { cu:estonian = { is_primary_culture_of = ROOT } }
+			add_homeland = estonian
+		} else = { remove_homeland = estonian }
+		if = {
+			limit = { cu:ewe = { is_primary_culture_of = ROOT } }
+			add_homeland = ewe
+		} else = { remove_homeland = ewe }
+		if = {
+			limit = { cu:fang = { is_primary_culture_of = ROOT } }
+			add_homeland = fang
+		} else = { remove_homeland = fang }
+		if = {
+			limit = { cu:filipino = { is_primary_culture_of = ROOT } }
+			add_homeland = filipino
+		} else = { remove_homeland = filipino }
+		if = {
+			limit = { cu:finnish = { is_primary_culture_of = ROOT } }
+			add_homeland = finnish
+		} else = { remove_homeland = finnish }
+		if = {
+			limit = { cu:flemish = { is_primary_culture_of = ROOT } }
+			add_homeland = flemish
+		} else = { remove_homeland = flemish }
+		if = {
+			limit = { cu:fluvian_bantu = { is_primary_culture_of = ROOT } }
+			add_homeland = fluvian_bantu
+		} else = { remove_homeland = fluvian_bantu }
+		if = {
+			limit = { cu:fon = { is_primary_culture_of = ROOT } }
+			add_homeland = fon
+		} else = { remove_homeland = fon }
+		if = {
+			limit = { cu:franco_canadian = { is_primary_culture_of = ROOT } }
+			add_homeland = franco_canadian
+		} else = { remove_homeland = franco_canadian }
+		if = {
+			limit = { cu:francoprovencal = { is_primary_culture_of = ROOT } }
+			add_homeland = francoprovencal
+		} else = { remove_homeland = francoprovencal }
+		if = {
+			limit = { cu:french = { is_primary_culture_of = ROOT } }
+			add_homeland = french
+		} else = { remove_homeland = french }
+		if = {
+			limit = { cu:fulbe = { is_primary_culture_of = ROOT } }
+			add_homeland = fulbe
+		} else = { remove_homeland = fulbe }
+		if = {
+			limit = { cu:fur = { is_primary_culture_of = ROOT } }
+			add_homeland = fur
+		} else = { remove_homeland = fur }
+		if = {
+			limit = { cu:galician = { is_primary_culture_of = ROOT } }
+			add_homeland = galician
+		} else = { remove_homeland = galician }
+		if = {
+			limit = { cu:georgian = { is_primary_culture_of = ROOT } }
+			add_homeland = georgian
+		} else = { remove_homeland = georgian }
+		if = {
+			limit = { cu:greek = { is_primary_culture_of = ROOT } }
+			add_homeland = greek
+		} else = { remove_homeland = greek }
+		if = {
+			limit = { cu:guajiro = { is_primary_culture_of = ROOT } }
+			add_homeland = guajiro
+		} else = { remove_homeland = guajiro }
+		if = {
+			limit = { cu:guarani = { is_primary_culture_of = ROOT } }
+			add_homeland = guarani
+		} else = { remove_homeland = guarani }
+		if = {
+			limit = { cu:gujarati = { is_primary_culture_of = ROOT } }
+			add_homeland = gujarati
+		} else = { remove_homeland = gujarati }
+		if = {
+			limit = { cu:hakka = { is_primary_culture_of = ROOT } }
+			add_homeland = hakka
+		} else = { remove_homeland = hakka }
+		if = {
+			limit = { cu:han = { is_primary_culture_of = ROOT } }
+			add_homeland = han
+		} else = { remove_homeland = han }
+		if = {
+			limit = { cu:haratin = { is_primary_culture_of = ROOT } }
+			add_homeland = haratin
+		} else = { remove_homeland = haratin }
+		if = {
+			limit = { cu:hausa = { is_primary_culture_of = ROOT } }
+			add_homeland = hausa
+		} else = { remove_homeland = hausa }
+		if = {
+			limit = { cu:hawaiian = { is_primary_culture_of = ROOT } }
+			add_homeland = hawaiian
+		} else = { remove_homeland = hawaiian }
+		if = {
+			limit = { cu:hazara = { is_primary_culture_of = ROOT } }
+			add_homeland = hazara
+		} else = { remove_homeland = hazara }
+		if = {
+			limit = { cu:herero = { is_primary_culture_of = ROOT } }
+			add_homeland = herero
+		} else = { remove_homeland = herero }
+		if = {
+			limit = { cu:hokan = { is_primary_culture_of = ROOT } }
+			add_homeland = hokan
+		} else = { remove_homeland = hokan }
+		if = {
+			limit = { cu:hungarian = { is_primary_culture_of = ROOT } }
+			add_homeland = hungarian
+		} else = { remove_homeland = hungarian }
+		if = {
+			limit = { cu:ibibio = { is_primary_culture_of = ROOT } }
+			add_homeland = ibibio
+		} else = { remove_homeland = ibibio }
+		if = {
+			limit = { cu:ibo = { is_primary_culture_of = ROOT } }
+			add_homeland = ibo
+		} else = { remove_homeland = ibo }
+		if = {
+			limit = { cu:icelandic = { is_primary_culture_of = ROOT } }
+			add_homeland = icelandic
+		} else = { remove_homeland = icelandic }
+		if = {
+			limit = { cu:inuit = { is_primary_culture_of = ROOT } }
+			add_homeland = inuit
+		} else = { remove_homeland = inuit }
+		if = {
+			limit = { cu:irish = { is_primary_culture_of = ROOT } }
+			add_homeland = irish
+		} else = { remove_homeland = irish }
+		if = {
+			limit = { cu:iroquoian = { is_primary_culture_of = ROOT } }
+			add_homeland = iroquoian
+		} else = { remove_homeland = iroquoian }
+		if = {
+			limit = { cu:japanese = { is_primary_culture_of = ROOT } }
+			add_homeland = japanese
+		} else = { remove_homeland = japanese }
+		if = {
+			limit = { cu:javan = { is_primary_culture_of = ROOT } }
+			add_homeland = javan
+		} else = { remove_homeland = javan }
+		if = {
+			limit = { cu:kachin = { is_primary_culture_of = ROOT } }
+			add_homeland = kachin
+		} else = { remove_homeland = kachin }
+		if = {
+			limit = { cu:kalmyk = { is_primary_culture_of = ROOT } }
+			add_homeland = kalmyk
+		} else = { remove_homeland = kalmyk }
+		if = {
+			limit = { cu:kanauji = { is_primary_culture_of = ROOT } }
+			add_homeland = kanauji
+		} else = { remove_homeland = kanauji }
+		if = {
+			limit = { cu:kannada = { is_primary_culture_of = ROOT } }
+			add_homeland = kannada
+		} else = { remove_homeland = kannada }
+		if = {
+			limit = { cu:kanuri = { is_primary_culture_of = ROOT } }
+			add_homeland = kanuri
+		} else = { remove_homeland = kanuri }
+		if = {
+			limit = { cu:karen = { is_primary_culture_of = ROOT } }
+			add_homeland = karen
+		} else = { remove_homeland = karen }
+		if = {
+			limit = { cu:kashmiri = { is_primary_culture_of = ROOT } }
+			add_homeland = kashmiri
+		} else = { remove_homeland = kashmiri }
+		if = {
+			limit = { cu:kavango_bantu = { is_primary_culture_of = ROOT } }
+			add_homeland = kavango_bantu
+		} else = { remove_homeland = kavango_bantu }
+		if = {
+			limit = { cu:kazak = { is_primary_culture_of = ROOT } }
+			add_homeland = kazak
+		} else = { remove_homeland = kazak }
+		if = {
+			limit = { cu:khmer = { is_primary_culture_of = ROOT } }
+			add_homeland = khmer
+		} else = { remove_homeland = khmer }
+		if = {
+			limit = { cu:khmu = { is_primary_culture_of = ROOT } }
+			add_homeland = khmu
+		} else = { remove_homeland = khmu }
+		if = {
+			limit = { cu:khoisan = { is_primary_culture_of = ROOT } }
+			add_homeland = khoisan
+		} else = { remove_homeland = khoisan }
+		if = {
+			limit = { cu:kikuyu = { is_primary_culture_of = ROOT } }
+			add_homeland = kikuyu
+		} else = { remove_homeland = kikuyu }
+		if = {
+			limit = { cu:kirgiz = { is_primary_culture_of = ROOT } }
+			add_homeland = kirgiz
+		} else = { remove_homeland = kirgiz }
+		if = {
+			limit = { cu:kissi = { is_primary_culture_of = ROOT } }
+			add_homeland = kissi
+		} else = { remove_homeland = kissi }
+		if = {
+			limit = { cu:korean = { is_primary_culture_of = ROOT } }
+			add_homeland = korean
+		} else = { remove_homeland = korean }
+		if = {
+			limit = { cu:kru = { is_primary_culture_of = ROOT } }
+			add_homeland = kru
+		} else = { remove_homeland = kru }
+		if = {
+			limit = { cu:kurdish = { is_primary_culture_of = ROOT } }
+			add_homeland = kurdish
+		} else = { remove_homeland = kurdish }
+		if = {
+			limit = { cu:lacustrine_bantu = { is_primary_culture_of = ROOT } }
+			add_homeland = lacustrine_bantu
+		} else = { remove_homeland = lacustrine_bantu }
+		if = {
+			limit = { cu:lao = { is_primary_culture_of = ROOT } }
+			add_homeland = lao
+		} else = { remove_homeland = lao }
+		if = {
+			limit = { cu:latvian = { is_primary_culture_of = ROOT } }
+			add_homeland = latvian
+		} else = { remove_homeland = latvian }
+		if = {
+			limit = { cu:lithuanian = { is_primary_culture_of = ROOT } }
+			add_homeland = lithuanian
+		} else = { remove_homeland = lithuanian }
+		if = {
+			limit = { cu:lomwe = { is_primary_culture_of = ROOT } }
+			add_homeland = lomwe
+		} else = { remove_homeland = lomwe }
+		if = {
+			limit = { cu:luba = { is_primary_culture_of = ROOT } }
+			add_homeland = luba
+		} else = { remove_homeland = luba }
+		if = {
+			limit = { cu:lunda = { is_primary_culture_of = ROOT } }
+			add_homeland = lunda
+		} else = { remove_homeland = lunda }
+		if = {
+			limit = { cu:luo = { is_primary_culture_of = ROOT } }
+			add_homeland = luo
+		} else = { remove_homeland = luo }
+		if = {
+			limit = { cu:maasai = { is_primary_culture_of = ROOT } }
+			add_homeland = maasai
+		} else = { remove_homeland = maasai }
+		if = {
+			limit = { cu:maghrebi = { is_primary_culture_of = ROOT } }
+			add_homeland = maghrebi
+		} else = { remove_homeland = maghrebi }
+		if = {
+			limit = { cu:makua = { is_primary_culture_of = ROOT } }
+			add_homeland = makua
+		} else = { remove_homeland = makua }
+		if = {
+			limit = { cu:malagasy = { is_primary_culture_of = ROOT } }
+			add_homeland = malagasy
+		} else = { remove_homeland = malagasy }
+		if = {
+			limit = { cu:malay = { is_primary_culture_of = ROOT } }
+			add_homeland = malay
+		} else = { remove_homeland = malay }
+		if = {
+			limit = { cu:malayalam = { is_primary_culture_of = ROOT } }
+			add_homeland = malayalam
+		} else = { remove_homeland = malayalam }
+		if = {
+			limit = { cu:maltese = { is_primary_culture_of = ROOT } }
+			add_homeland = maltese
+		} else = { remove_homeland = maltese }
+		if = {
+			limit = { cu:manchu = { is_primary_culture_of = ROOT } }
+			add_homeland = manchu
+		} else = { remove_homeland = manchu }
+		if = {
+			limit = { cu:mande = { is_primary_culture_of = ROOT } }
+			add_homeland = mande
+		} else = { remove_homeland = mande }
+		if = {
+			limit = { cu:manipuri = { is_primary_culture_of = ROOT } }
+			add_homeland = manipuri
+		} else = { remove_homeland = manipuri }
+		if = {
+			limit = { cu:maori = { is_primary_culture_of = ROOT } }
+			add_homeland = maori
+		} else = { remove_homeland = maori }
+		if = {
+			limit = { cu:marathi = { is_primary_culture_of = ROOT } }
+			add_homeland = marathi
+		} else = { remove_homeland = marathi }
+		if = {
+			limit = { cu:mashriqi = { is_primary_culture_of = ROOT } }
+			add_homeland = mashriqi
+		} else = { remove_homeland = mashriqi }
+		if = {
+			limit = { cu:mayan = { is_primary_culture_of = ROOT } }
+			add_homeland = mayan
+		} else = { remove_homeland = mayan }
+		if = {
+			limit = { cu:melanesian = { is_primary_culture_of = ROOT } }
+			add_homeland = melanesian
+		} else = { remove_homeland = melanesian }
+		if = {
+			limit = { cu:metis = { is_primary_culture_of = ROOT } }
+			add_homeland = metis
+		} else = { remove_homeland = metis }
+		if = {
+			limit = { cu:mexican = { is_primary_culture_of = ROOT } }
+			add_homeland = mexican
+		} else = { remove_homeland = mexican }
+		if = {
+			limit = { cu:miao = { is_primary_culture_of = ROOT } }
+			add_homeland = miao
+		} else = { remove_homeland = miao }
+		if = {
+			limit = { cu:micronesian = { is_primary_culture_of = ROOT } }
+			add_homeland = micronesian
+		} else = { remove_homeland = micronesian }
+		if = {
+			limit = { cu:min = { is_primary_culture_of = ROOT } }
+			add_homeland = min
+		} else = { remove_homeland = min }
+		if = {
+			limit = { cu:miskito = { is_primary_culture_of = ROOT } }
+			add_homeland = miskito
+		} else = { remove_homeland = miskito }
+		if = {
+			limit = { cu:misri = { is_primary_culture_of = ROOT } }
+			add_homeland = misri
+		} else = { remove_homeland = misri }
+		if = {
+			limit = { cu:mixtec = { is_primary_culture_of = ROOT } }
+			add_homeland = mixtec
+		} else = { remove_homeland = mixtec }
+		if = {
+			limit = { cu:moluccan = { is_primary_culture_of = ROOT } }
+			add_homeland = moluccan
+		} else = { remove_homeland = moluccan }
+		if = {
+			limit = { cu:mon = { is_primary_culture_of = ROOT } }
+			add_homeland = mon
+		} else = { remove_homeland = mon }
+		if = {
+			limit = { cu:mongo = { is_primary_culture_of = ROOT } }
+			add_homeland = mongo
+		} else = { remove_homeland = mongo }
+		if = {
+			limit = { cu:mongol = { is_primary_culture_of = ROOT } }
+			add_homeland = mongol
+		} else = { remove_homeland = mongol }
+		if = {
+			limit = { cu:moro = { is_primary_culture_of = ROOT } }
+			add_homeland = moro
+		} else = { remove_homeland = moro }
+		if = {
+			limit = { cu:mossi = { is_primary_culture_of = ROOT } }
+			add_homeland = mossi
+		} else = { remove_homeland = mossi }
+		if = {
+			limit = { cu:muisca = { is_primary_culture_of = ROOT } }
+			add_homeland = muisca
+		} else = { remove_homeland = muisca }
+		if = {
+			limit = { cu:muskogean = { is_primary_culture_of = ROOT } }
+			add_homeland = muskogean
+		} else = { remove_homeland = muskogean }
+		if = {
+			limit = { cu:nahua = { is_primary_culture_of = ROOT } }
+			add_homeland = nahua
+		} else = { remove_homeland = nahua }
+		if = {
+			limit = { cu:navajo = { is_primary_culture_of = ROOT } }
+			add_homeland = navajo
+		} else = { remove_homeland = navajo }
+		if = {
+			limit = { cu:nepali = { is_primary_culture_of = ROOT } }
+			add_homeland = nepali
+		} else = { remove_homeland = nepali }
+		if = {
+			limit = { cu:nez_perce = { is_primary_culture_of = ROOT } }
+			add_homeland = nez_perce
+		} else = { remove_homeland = nez_perce }
+		if = {
+			limit = { cu:nguni = { is_primary_culture_of = ROOT } }
+			add_homeland = nguni
+		} else = { remove_homeland = nguni }
+		if = {
+			limit = { cu:nilotic = { is_primary_culture_of = ROOT } }
+			add_homeland = nilotic
+		} else = { remove_homeland = nilotic }
+		if = {
+			limit = { cu:north_andean = { is_primary_culture_of = ROOT } }
+			add_homeland = north_andean
+		} else = { remove_homeland = north_andean }
+		if = {
+			limit = { cu:north_caucasian = { is_primary_culture_of = ROOT } }
+			add_homeland = north_caucasian
+		} else = { remove_homeland = north_caucasian }
+		if = {
+			limit = { cu:north_german = { is_primary_culture_of = ROOT } }
+			add_homeland = north_german
+		} else = { remove_homeland = north_german }
+		if = {
+			limit = { cu:north_italian = { is_primary_culture_of = ROOT } }
+			add_homeland = north_italian
+		} else = { remove_homeland = north_italian }
+		if = {
+			limit = { cu:norwegian = { is_primary_culture_of = ROOT } }
+			add_homeland = norwegian
+		} else = { remove_homeland = norwegian }
+		if = {
+			limit = { cu:nuba = { is_primary_culture_of = ROOT } }
+			add_homeland = nuba
+		} else = { remove_homeland = nuba }
+		if = {
+			limit = { cu:nuer = { is_primary_culture_of = ROOT } }
+			add_homeland = nuer
+		} else = { remove_homeland = nuer }
+		if = {
+			limit = { cu:occitan = { is_primary_culture_of = ROOT } }
+			add_homeland = occitan
+		} else = { remove_homeland = occitan }
+		if = {
+			limit = { cu:oodham = { is_primary_culture_of = ROOT } }
+			add_homeland = oodham
+		} else = { remove_homeland = oodham }
+		if = {
+			limit = { cu:oriya = { is_primary_culture_of = ROOT } }
+			add_homeland = oriya
+		} else = { remove_homeland = oriya }
+		if = {
+			limit = { cu:oromo = { is_primary_culture_of = ROOT } }
+			add_homeland = oromo
+		} else = { remove_homeland = oromo }
+		if = {
+			limit = { cu:ovimbundu = { is_primary_culture_of = ROOT } }
+			add_homeland = ovimbundu
+		} else = { remove_homeland = ovimbundu }
+		if = {
+			limit = { cu:paiute = { is_primary_culture_of = ROOT } }
+			add_homeland = paiute
+		} else = { remove_homeland = paiute }
+		if = {
+			limit = { cu:panjabi = { is_primary_culture_of = ROOT } }
+			add_homeland = panjabi
+		} else = { remove_homeland = panjabi }
+		if = {
+			limit = { cu:pashtun = { is_primary_culture_of = ROOT } }
+			add_homeland = pashtun
+		} else = { remove_homeland = pashtun }
+		if = {
+			limit = { cu:patagonian = { is_primary_culture_of = ROOT } }
+			add_homeland = patagonian
+		} else = { remove_homeland = patagonian }
+		if = {
+			limit = { cu:persian = { is_primary_culture_of = ROOT } }
+			add_homeland = persian
+		} else = { remove_homeland = persian }
+		if = {
+			limit = { cu:platinean = { is_primary_culture_of = ROOT } }
+			add_homeland = platinean
+		} else = { remove_homeland = platinean }
+		if = {
+			limit = { cu:polish = { is_primary_culture_of = ROOT } }
+			add_homeland = polish
+		} else = { remove_homeland = polish }
+		if = {
+			limit = { cu:polynesian = { is_primary_culture_of = ROOT } }
+			add_homeland = polynesian
+		} else = { remove_homeland = polynesian }
+		if = {
+			limit = { cu:portuguese = { is_primary_culture_of = ROOT } }
+			add_homeland = portuguese
+		} else = { remove_homeland = portuguese }
+		if = {
+			limit = { cu:pueblo = { is_primary_culture_of = ROOT } }
+			add_homeland = pueblo
+		} else = { remove_homeland = pueblo }
+		if = {
+			limit = { cu:quechua = { is_primary_culture_of = ROOT } }
+			add_homeland = quechua
+		} else = { remove_homeland = quechua }
+		if = {
+			limit = { cu:rajput = { is_primary_culture_of = ROOT } }
+			add_homeland = rajput
+		} else = { remove_homeland = rajput }
+		if = {
+			limit = { cu:romanian = { is_primary_culture_of = ROOT } }
+			add_homeland = romanian
+		} else = { remove_homeland = romanian }
+		if = {
+			limit = { cu:ruanda = { is_primary_culture_of = ROOT } }
+			add_homeland = ruanda
+		} else = { remove_homeland = ruanda }
+		if = {
+			limit = { cu:rundi = { is_primary_culture_of = ROOT } }
+			add_homeland = rundi
+		} else = { remove_homeland = rundi }
+		if = {
+			limit = { cu:russian = { is_primary_culture_of = ROOT } }
+			add_homeland = russian
+		} else = { remove_homeland = russian }
+		if = {
+			limit = { cu:salish = { is_primary_culture_of = ROOT } }
+			add_homeland = salish
+		} else = { remove_homeland = salish }
+		if = {
+			limit = { cu:sami = { is_primary_culture_of = ROOT } }
+			add_homeland = sami
+		} else = { remove_homeland = sami }
+		if = {
+			limit = { cu:sara = { is_primary_culture_of = ROOT } }
+			add_homeland = sara
+		} else = { remove_homeland = sara }
+		if = {
+			limit = { cu:scottish = { is_primary_culture_of = ROOT } }
+			add_homeland = scottish
+		} else = { remove_homeland = scottish }
+		if = {
+			limit = { cu:sena = { is_primary_culture_of = ROOT } }
+			add_homeland = sena
+		} else = { remove_homeland = sena }
+		if = {
+			limit = { cu:senufo = { is_primary_culture_of = ROOT } }
+			add_homeland = senufo
+		} else = { remove_homeland = senufo }
+		if = {
+			limit = { cu:sephardic = { is_primary_culture_of = ROOT } }
+			add_homeland = sephardic
+		} else = { remove_homeland = sephardic }
+		if = {
+			limit = { cu:serb = { is_primary_culture_of = ROOT } }
+			add_homeland = serb
+		} else = { remove_homeland = serb }
+		if = {
+			limit = { cu:shan = { is_primary_culture_of = ROOT } }
+			add_homeland = shan
+		} else = { remove_homeland = shan }
+		if = {
+			limit = { cu:shona = { is_primary_culture_of = ROOT } }
+			add_homeland = shona
+		} else = { remove_homeland = shona }
+		if = {
+			limit = { cu:siberian = { is_primary_culture_of = ROOT } }
+			add_homeland = siberian
+		} else = { remove_homeland = siberian }
+		if = {
+			limit = { cu:sidama = { is_primary_culture_of = ROOT } }
+			add_homeland = sidama
+		} else = { remove_homeland = sidama }
+		if = {
+			limit = { cu:sindi = { is_primary_culture_of = ROOT } }
+			add_homeland = sindi
+		} else = { remove_homeland = sindi }
+		if = {
+			limit = { cu:sinhala = { is_primary_culture_of = ROOT } }
+			add_homeland = sinhala
+		} else = { remove_homeland = sinhala }
+		if = {
+			limit = { cu:siouan = { is_primary_culture_of = ROOT } }
+			add_homeland = siouan
+		} else = { remove_homeland = siouan }
+		if = {
+			limit = { cu:slovak = { is_primary_culture_of = ROOT } }
+			add_homeland = slovak
+		} else = { remove_homeland = slovak }
+		if = {
+			limit = { cu:slovene = { is_primary_culture_of = ROOT } }
+			add_homeland = slovene
+		} else = { remove_homeland = slovene }
+		if = {
+			limit = { cu:somali = { is_primary_culture_of = ROOT } }
+			add_homeland = somali
+		} else = { remove_homeland = somali }
+		if = {
+			limit = { cu:songhai = { is_primary_culture_of = ROOT } }
+			add_homeland = songhai
+		} else = { remove_homeland = songhai }
+		if = {
+			limit = { cu:sorb = { is_primary_culture_of = ROOT } }
+			add_homeland = sorb
+		} else = { remove_homeland = sorb }
+		if = {
+			limit = { cu:sotho = { is_primary_culture_of = ROOT } }
+			add_homeland = sotho
+		} else = { remove_homeland = sotho }
+		if = {
+			limit = { cu:south_andean = { is_primary_culture_of = ROOT } }
+			add_homeland = south_andean
+		} else = { remove_homeland = south_andean }
+		if = {
+			limit = { cu:south_german = { is_primary_culture_of = ROOT } }
+			add_homeland = south_german
+		} else = { remove_homeland = south_german }
+		if = {
+			limit = { cu:south_italian = { is_primary_culture_of = ROOT } }
+			add_homeland = south_italian
+		} else = { remove_homeland = south_italian }
+		if = {
+			limit = { cu:spanish = { is_primary_culture_of = ROOT } }
+			add_homeland = spanish
+		} else = { remove_homeland = spanish }
+		if = {
+			limit = { cu:sudanese = { is_primary_culture_of = ROOT } }
+			add_homeland = sudanese
+		} else = { remove_homeland = sudanese }
+		if = {
+			limit = { cu:sukuma = { is_primary_culture_of = ROOT } }
+			add_homeland = sukuma
+		} else = { remove_homeland = sukuma }
+		if = {
+			limit = { cu:sumatran = { is_primary_culture_of = ROOT } }
+			add_homeland = sumatran
+		} else = { remove_homeland = sumatran }
+		if = {
+			limit = { cu:swahili = { is_primary_culture_of = ROOT } }
+			add_homeland = swahili
+		} else = { remove_homeland = swahili }
+		if = {
+			limit = { cu:swedish = { is_primary_culture_of = ROOT } }
+			add_homeland = swedish
+		} else = { remove_homeland = swedish }
+		if = {
+			limit = { cu:tajik = { is_primary_culture_of = ROOT } }
+			add_homeland = tajik
+		} else = { remove_homeland = tajik }
+		if = {
+			limit = { cu:tamil = { is_primary_culture_of = ROOT } }
+			add_homeland = tamil
+		} else = { remove_homeland = tamil }
+		if = {
+			limit = { cu:tarascan = { is_primary_culture_of = ROOT } }
+			add_homeland = tarascan
+		} else = { remove_homeland = tarascan }
+		if = {
+			limit = { cu:tatar = { is_primary_culture_of = ROOT } }
+			add_homeland = tatar
+		} else = { remove_homeland = tatar }
+		if = {
+			limit = { cu:teda = { is_primary_culture_of = ROOT } }
+			add_homeland = teda
+		} else = { remove_homeland = teda }
+		if = {
+			limit = { cu:telegu = { is_primary_culture_of = ROOT } }
+			add_homeland = telegu
+		} else = { remove_homeland = telegu }
+		if = {
+			limit = { cu:thai = { is_primary_culture_of = ROOT } }
+			add_homeland = thai
+		} else = { remove_homeland = thai }
+		if = {
+			limit = { cu:tibetan = { is_primary_culture_of = ROOT } }
+			add_homeland = tibetan
+		} else = { remove_homeland = tibetan }
+		if = {
+			limit = { cu:tigray = { is_primary_culture_of = ROOT } }
+			add_homeland = tigray
+		} else = { remove_homeland = tigray }
+		if = {
+			limit = { cu:tiv = { is_primary_culture_of = ROOT } }
+			add_homeland = tiv
+		} else = { remove_homeland = tiv }
+		if = {
+			limit = { cu:tonga = { is_primary_culture_of = ROOT } }
+			add_homeland = tonga
+		} else = { remove_homeland = tonga }
+		if = {
+			limit = { cu:tswana = { is_primary_culture_of = ROOT } }
+			add_homeland = tswana
+		} else = { remove_homeland = tswana }
+		if = {
+			limit = { cu:tuareg = { is_primary_culture_of = ROOT } }
+			add_homeland = tuareg
+		} else = { remove_homeland = tuareg }
+		if = {
+			limit = { cu:tupinamba = { is_primary_culture_of = ROOT } }
+			add_homeland = tupinamba
+		} else = { remove_homeland = tupinamba }
+		if = {
+			limit = { cu:turkish = { is_primary_culture_of = ROOT } }
+			add_homeland = turkish
+		} else = { remove_homeland = turkish }
+		if = {
+			limit = { cu:turkmen = { is_primary_culture_of = ROOT } }
+			add_homeland = turkmen
+		} else = { remove_homeland = turkmen }
+		if = {
+			limit = { cu:tuvan = { is_primary_culture_of = ROOT } }
+			add_homeland = tuvan
+		} else = { remove_homeland = tuvan }
+		if = {
+			limit = { cu:ugrian = { is_primary_culture_of = ROOT } }
+			add_homeland = ugrian
+		} else = { remove_homeland = ugrian }
+		if = {
+			limit = { cu:uighur = { is_primary_culture_of = ROOT } }
+			add_homeland = uighur
+		} else = { remove_homeland = uighur }
+		if = {
+			limit = { cu:ukrainian = { is_primary_culture_of = ROOT } }
+			add_homeland = ukrainian
+		} else = { remove_homeland = ukrainian }
+		if = {
+			limit = { cu:unyamwezi = { is_primary_culture_of = ROOT } }
+			add_homeland = unyamwezi
+		} else = { remove_homeland = unyamwezi }
+		if = {
+			limit = { cu:uzbek = { is_primary_culture_of = ROOT } }
+			add_homeland = uzbek
+		} else = { remove_homeland = uzbek }
+		if = {
+			limit = { cu:vietnamese = { is_primary_culture_of = ROOT } }
+			add_homeland = vietnamese
+		} else = { remove_homeland = vietnamese }
+		if = {
+			limit = { cu:wallonian = { is_primary_culture_of = ROOT } }
+			add_homeland = wallonian
+		} else = { remove_homeland = wallonian }
+		if = {
+			limit = { cu:welsh = { is_primary_culture_of = ROOT } }
+			add_homeland = welsh
+		} else = { remove_homeland = welsh }
+		if = {
+			limit = { cu:wolof = { is_primary_culture_of = ROOT } }
+			add_homeland = wolof
+		} else = { remove_homeland = wolof }
+		if = {
+			limit = { cu:xhosa = { is_primary_culture_of = ROOT } }
+			add_homeland = xhosa
+		} else = { remove_homeland = xhosa }
+		if = {
+			limit = { cu:yakut = { is_primary_culture_of = ROOT } }
+			add_homeland = yakut
+		} else = { remove_homeland = yakut }
+		if = {
+			limit = { cu:yankee = { is_primary_culture_of = ROOT } }
+			add_homeland = yankee
+		} else = { remove_homeland = yankee }
+		if = {
+			limit = { cu:yao = { is_primary_culture_of = ROOT } }
+			add_homeland = yao
+		} else = { remove_homeland = yao }
+		if = {
+			limit = { cu:yemenite = { is_primary_culture_of = ROOT } }
+			add_homeland = yemenite
+		} else = { remove_homeland = yemenite }
+		if = {
+			limit = { cu:yi = { is_primary_culture_of = ROOT } }
+			add_homeland = yi
+		} else = { remove_homeland = yi }
+		if = {
+			limit = { cu:yoruba = { is_primary_culture_of = ROOT } }
+			add_homeland = yoruba
+		} else = { remove_homeland = yoruba }
+		if = {
+			limit = { cu:yuanzhumin = { is_primary_culture_of = ROOT } }
+			add_homeland = yuanzhumin
+		} else = { remove_homeland = yuanzhumin }
+		if = {
+			limit = { cu:yue = { is_primary_culture_of = ROOT } }
+			add_homeland = yue
+		} else = { remove_homeland = yue }
+		if = {
+			limit = { cu:zapotec = { is_primary_culture_of = ROOT } }
+			add_homeland = zapotec
+		} else = { remove_homeland = zapotec }
+		if = {
+			limit = { cu:zhuang = { is_primary_culture_of = ROOT } }
+			add_homeland = zhuang
+		} else = { remove_homeland = zhuang }
+		if = {
+			limit = { cu:zulu = { is_primary_culture_of = ROOT } }
+			add_homeland = zulu
+		} else = { remove_homeland = zulu }
+#Syncretic Cultures Mod
+		if = {
+			limit = { cu:afghan = { is_primary_culture_of = ROOT } }
+			add_homeland = afghan
+		} else = { remove_homeland = afghan }
+		if = {
+			limit = { cu:anglosphere = { is_primary_culture_of = ROOT } }
+			add_homeland = anglosphere
+		} else = { remove_homeland = anglosphere }
+		if = {
+			limit = { cu:arabian = { is_primary_culture_of = ROOT } }
+			add_homeland = arabian
+		} else = { remove_homeland = arabian }
+		if = {
+			limit = { cu:baltic = { is_primary_culture_of = ROOT } }
+			add_homeland = baltic
+		} else = { remove_homeland = baltic }
+		if = {
+			limit = { cu:modern_british = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_british
+		} else = { remove_homeland = modern_british }
+		if = {
+			limit = { cu:byzantine = { is_primary_culture_of = ROOT } }
+			add_homeland = byzantine
+		} else = { remove_homeland = byzantine }
+		if = {
+			limit = { cu:canadian = { is_primary_culture_of = ROOT } }
+			add_homeland = canadian
+		} else = { remove_homeland = canadian }
+		if = {
+			limit = { cu:caucasian_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = caucasian_culture
+		} else = { remove_homeland = caucasian_culture }
+		if = {
+			limit = { cu:celtic_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = celtic_culture
+		} else = { remove_homeland = celtic_culture }
+		if = {
+			limit = { cu:central_african_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = central_african_culture
+		} else = { remove_homeland = central_african_culture }
+		if = {
+			limit = { cu:chinese = { is_primary_culture_of = ROOT } }
+			add_homeland = chinese
+		} else = { remove_homeland = chinese }
+		if = {
+			limit = { cu:czecho_slovak = { is_primary_culture_of = ROOT } }
+			add_homeland = czecho_slovak
+		} else = { remove_homeland = czecho_slovak }
+		if = {
+			limit = { cu:austro_hungarian = { is_primary_culture_of = ROOT } }
+			add_homeland = austro_hungarian
+		} else = { remove_homeland = austro_hungarian }
+		if = {
+			limit = { cu:dravidian_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = dravidian_culture
+		} else = { remove_homeland = dravidian_culture }
+		if = {
+			limit = { cu:east_aryan = { is_primary_culture_of = ROOT } }
+			add_homeland = east_aryan
+		} else = { remove_homeland = east_aryan }
+		if = {
+			limit = { cu:eastern_african_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = eastern_african_culture
+		} else = { remove_homeland = eastern_african_culture }
+		if = {
+			limit = { cu:ethiopian_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = ethiopian_culture
+		} else = { remove_homeland = ethiopian_culture }
+		if = {
+			limit = { cu:european_american = { is_primary_culture_of = ROOT } }
+			add_homeland = european_american
+		} else = { remove_homeland = european_american }
+		if = {
+			limit = { cu:finnic_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = finnic_culture
+		} else = { remove_homeland = finnic_culture }
+		if = {
+			limit = { cu:german = { is_primary_culture_of = ROOT } }
+			add_homeland = german
+		} else = { remove_homeland = german }
+		if = {
+			limit = { cu:germanic = { is_primary_culture_of = ROOT } }
+			add_homeland = germanic
+		} else = { remove_homeland = germanic }
+		if = {
+			limit = { cu:modern_korean = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_korean
+		} else = { remove_homeland = modern_korean }
+		if = {
+			limit = { cu:gran_colombian = { is_primary_culture_of = ROOT } }
+			add_homeland = gran_colombian
+		} else = { remove_homeland = gran_colombian }
+		if = {
+			limit = { cu:hindustani_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = hindustani_culture
+		} else = { remove_homeland = hindustani_culture }
+		if = {
+			limit = { cu:hispanic = { is_primary_culture_of = ROOT } }
+			add_homeland = hispanic
+		} else = { remove_homeland = hispanic }
+		if = {
+			limit = { cu:latino = { is_primary_culture_of = ROOT } }
+			add_homeland = latino
+		} else = { remove_homeland = latino }
+		if = {
+			limit = { cu:iranian = { is_primary_culture_of = ROOT } }
+			add_homeland = iranian
+		} else = { remove_homeland = iranian }
+		if = {
+			limit = { cu:iberian = { is_primary_culture_of = ROOT } }
+			add_homeland = iberian
+		} else = { remove_homeland = iberian }
+		if = {
+			limit = { cu:iberic = { is_primary_culture_of = ROOT } }
+			add_homeland = iberic
+		} else = { remove_homeland = iberic }
+		if = {
+			limit = { cu:indian = { is_primary_culture_of = ROOT } }
+			add_homeland = indian
+		} else = { remove_homeland = indian }
+		if = {
+			limit = { cu:indo_aryan_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = indo_aryan_culture
+		} else = { remove_homeland = indo_aryan_culture }
+		if = {
+			limit = { cu:israeli = { is_primary_culture_of = ROOT } }
+			add_homeland = israeli
+		} else = { remove_homeland = israeli }
+		if = {
+			limit = { cu:italian = { is_primary_culture_of = ROOT } }
+			add_homeland = italian
+		} else = { remove_homeland = italian }
+		if = {
+			limit = { cu:malayan = { is_primary_culture_of = ROOT } }
+			add_homeland = malayan
+		} else = { remove_homeland = malayan }
+		if = {
+			limit = { cu:modern_brazilian = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_brazilian
+		} else = { remove_homeland = modern_brazilian }
+		if = {
+			limit = { cu:modern_burmese = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_burmese
+		} else = { remove_homeland = modern_burmese }
+		if = {
+			limit = { cu:modern_french = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_french
+		} else = { remove_homeland = modern_french }
+		if = {
+			limit = { cu:modern_japanese = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_japanese
+		} else = { remove_homeland = modern_japanese }
+		if = {
+			limit = { cu:modern_mexican = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_mexican
+		} else = { remove_homeland = modern_mexican }
+		if = {
+			limit = { cu:modern_portuguese = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_portuguese
+		} else = { remove_homeland = modern_portuguese }
+		if = {
+			limit = { cu:modern_spanish = { is_primary_culture_of = ROOT } }
+			add_homeland = modern_spanish
+		} else = { remove_homeland = modern_spanish }
+		if = {
+			limit = { cu:native_american = { is_primary_culture_of = ROOT } }
+			add_homeland = native_american
+		} else = { remove_homeland = native_american }
+		if = {
+			limit = { cu:netherlandic = { is_primary_culture_of = ROOT } }
+			add_homeland = netherlandic
+		} else = { remove_homeland = netherlandic }
+		if = {
+			limit = { cu:polish_lithuanian = { is_primary_culture_of = ROOT } }
+			add_homeland = polish_lithuanian
+		} else = { remove_homeland = polish_lithuanian }
+		if = {
+			limit = { cu:polynesian_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = polynesian_culture
+		} else = { remove_homeland = polynesian_culture }
+		if = {
+			limit = { cu:porto_brazilian = { is_primary_culture_of = ROOT } }
+			add_homeland = porto_brazilian
+		} else = { remove_homeland = porto_brazilian }
+		if = {
+			limit = { cu:romance = { is_primary_culture_of = ROOT } }
+			add_homeland = romance
+		} else = { remove_homeland = romance }
+		if = {
+			limit = { cu:rus = { is_primary_culture_of = ROOT } }
+			add_homeland = rus
+		} else = { remove_homeland = rus }
+		if = {
+			limit = { cu:scandinavian = { is_primary_culture_of = ROOT } }
+			add_homeland = scandinavian
+		} else = { remove_homeland = scandinavian }
+		if = {
+			limit = { cu:southern_african_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = southern_african_culture
+		} else = { remove_homeland = southern_african_culture }
+		if = {
+			limit = { cu:sub_saharan_african = { is_primary_culture_of = ROOT } }
+			add_homeland = sub_saharan_african
+		} else = { remove_homeland = sub_saharan_african }
+		if = {
+			limit = { cu:swiss_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = swiss_culture
+		} else = { remove_homeland = swiss_culture }
+		if = {
+			limit = { cu:tai_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = tai_culture
+		} else = { remove_homeland = tai_culture }
+		if = {
+			limit = { cu:taiwanese = { is_primary_culture_of = ROOT } }
+			add_homeland = taiwanese
+		} else = { remove_homeland = taiwanese }
+		if = {
+			limit = { cu:turkic_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = turkic_culture
+		} else = { remove_homeland = turkic_culture }
+		if = {
+			limit = { cu:us_american = { is_primary_culture_of = ROOT } }
+			add_homeland = us_american
+		} else = { remove_homeland = us_american }
+		if = {
+			limit = { cu:west_slavic_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = west_slavic_culture
+		} else = { remove_homeland = west_slavic_culture }
+		if = {
+			limit = { cu:west_aryan = { is_primary_culture_of = ROOT } }
+			add_homeland = west_aryan
+		} else = { remove_homeland = west_aryan }
+		if = {
+			limit = { cu:western_african_culture = { is_primary_culture_of = ROOT } }
+			add_homeland = western_african_culture
+		} else = { remove_homeland = western_african_culture }
+		if = {
+			limit = { cu:yugoslavian = { is_primary_culture_of = ROOT } }
+			add_homeland = yugoslavian
+		} else = { remove_homeland = yugoslavian }
+#Divergences Mod
+		if = {
+			limit = { cu:afro_amerigan = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_amerigan
+		} else = { remove_homeland = afro_amerigan }
+		if = {
+			limit = { cu:afro_frankish = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_frankish
+		} else = { remove_homeland = afro_frankish }
+		if = {
+			limit = { cu:afro_germanic = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_germanic
+		} else = { remove_homeland = afro_germanic }
+		if = {
+			limit = { cu:afro_latino = { is_primary_culture_of = ROOT } }
+			add_homeland = afro_latino
+		} else = { remove_homeland = afro_latino }
+		if = {
+			limit = { cu:amazonian = { is_primary_culture_of = ROOT } }
+			add_homeland = amazonian
+		} else = { remove_homeland = amazonian }
+		if = {
+			limit = { cu:amazonien = { is_primary_culture_of = ROOT } }
+			add_homeland = amazonien
+		} else = { remove_homeland = amazonien }
+		if = {
+			limit = { cu:caladeran = { is_primary_culture_of = ROOT } }
+			add_homeland = caladeran
+		} else = { remove_homeland = caladeran }
+		if = {
+			limit = { cu:anglois = { is_primary_culture_of = ROOT } }
+			add_homeland = anglois
+		} else = { remove_homeland = anglois }
+		if = {
+			limit = { cu:athesian = { is_primary_culture_of = ROOT } }
+			add_homeland = athesian
+		} else = { remove_homeland = athesian }
+		if = {
+			limit = { cu:atlantian = { is_primary_culture_of = ROOT } }
+			add_homeland = atlantian
+		} else = { remove_homeland = atlantian }
+		if = {
+			limit = { cu:balters = { is_primary_culture_of = ROOT } }
+			add_homeland = balters
+		} else = { remove_homeland = balters }
+		if = {
+			limit = { cu:bashkir = { is_primary_culture_of = ROOT } }
+			add_homeland = bashkir
+		} else = { remove_homeland = bashkir }
+		if = {
+			limit = { cu:bastaard = { is_primary_culture_of = ROOT } }
+			add_homeland = bastaard
+		} else = { remove_homeland = bastaard }
+		if = {
+			limit = { cu:belgian = { is_primary_culture_of = ROOT } }
+			add_homeland = belgian
+		} else = { remove_homeland = belgian }
+		if = {
+			limit = { cu:beornian = { is_primary_culture_of = ROOT } }
+			add_homeland = beornian
+		} else = { remove_homeland = beornian }
+		if = {
+			limit = { cu:czech = { is_primary_culture_of = ROOT } }
+			add_homeland = czech
+		} else = { remove_homeland = czech }
+		if = {
+			limit = { cu:burgundian = { is_primary_culture_of = ROOT } }
+			add_homeland = burgundian
+		} else = { remove_homeland = burgundian }
+		if = {
+			limit = { cu:spanish = { is_primary_culture_of = ROOT } }
+			add_homeland = spanish
+		} else = { remove_homeland = spanish }
+		if = {
+			limit = { cu:central_italian = { is_primary_culture_of = ROOT } }
+			add_homeland = central_italian
+		} else = { remove_homeland = central_italian }
+		if = {
+			limit = { cu:cham = { is_primary_culture_of = ROOT } }
+			add_homeland = cham
+		} else = { remove_homeland = cham }
+		if = {
+			limit = { cu:filipino = { is_primary_culture_of = ROOT } }
+			add_homeland = filipino
+		} else = { remove_homeland = filipino }
+		if = {
+			limit = { cu:south_german = { is_primary_culture_of = ROOT } }
+			add_homeland = south_german
+		} else = { remove_homeland = south_german }
+		if = {
+			limit = { cu:north_german = { is_primary_culture_of = ROOT } }
+			add_homeland = north_german
+		} else = { remove_homeland = north_german }
+		if = {
+			limit = { cu:boer = { is_primary_culture_of = ROOT } }
+			add_homeland = boer
+		} else = { remove_homeland = boer }
+		if = {
+			limit = { cu:granadan = { is_primary_culture_of = ROOT } }
+			add_homeland = granadan
+		} else = { remove_homeland = granadan }
+		if = {
+			limit = { cu:guianan = { is_primary_culture_of = ROOT } }
+			add_homeland = guianan
+		} else = { remove_homeland = guianan }
+		if = {
+			limit = { cu:aborigine = { is_primary_culture_of = ROOT } }
+			add_homeland = aborigine
+		} else = { remove_homeland = aborigine }
+		if = {
+			limit = { cu:kaiganese = { is_primary_culture_of = ROOT } }
+			add_homeland = kaiganese
+		} else = { remove_homeland = kaiganese }
+		if = {
+			limit = { cu:kazani = { is_primary_culture_of = ROOT } }
+			add_homeland = kazani
+		} else = { remove_homeland = kazani }
+		if = {
+			limit = { cu:kirim = { is_primary_culture_of = ROOT } }
+			add_homeland = kirim
+		} else = { remove_homeland = kirim }
+		if = {
+			limit = { cu:ayitian = { is_primary_culture_of = ROOT } }
+			add_homeland = ayitian
+		} else = { remove_homeland = ayitian }
+		if = {
+			limit = { cu:krymchak = { is_primary_culture_of = ROOT } }
+			add_homeland = krymchak
+		} else = { remove_homeland = krymchak }
+		if = {
+			limit = { cu:lotharian = { is_primary_culture_of = ROOT } }
+			add_homeland = lotharian
+		} else = { remove_homeland = lotharian }
+		if = {
+			limit = { cu:lusitanian = { is_primary_culture_of = ROOT } }
+			add_homeland = lusitanian
+		} else = { remove_homeland = lusitanian }
+		if = {
+			limit = { cu:maori = { is_primary_culture_of = ROOT } }
+			add_homeland = maori
+		} else = { remove_homeland = maori }
+		if = {
+			limit = { cu:navarragon = { is_primary_culture_of = ROOT } }
+			add_homeland = navarragon
+		} else = { remove_homeland = navarragon }
+		if = {
+			limit = { cu:north_russian = { is_primary_culture_of = ROOT } }
+			add_homeland = north_russian
+		} else = { remove_homeland = north_russian }
+		if = {
+			limit = { cu:plantagenian = { is_primary_culture_of = ROOT } }
+			add_homeland = plantagenian
+		} else = { remove_homeland = plantagenian }
+		if = {
+			limit = { cu:galician = { is_primary_culture_of = ROOT } }
+			add_homeland = galician
+		} else = { remove_homeland = galician }
+		if = {
+			limit = { cu:occitan = { is_primary_culture_of = ROOT } }
+			add_homeland = occitan
+		} else = { remove_homeland = occitan }
+		if = {
+			limit = { cu:qingqiuan = { is_primary_culture_of = ROOT } }
+			add_homeland = qingqiuan
+		} else = { remove_homeland = qingqiuan }
+		if = {
+			limit = { cu:rheinish = { is_primary_culture_of = ROOT } }
+			add_homeland = rheinish
+		} else = { remove_homeland = rheinish }
+		if = {
+			limit = { cu:rohnnst = { is_primary_culture_of = ROOT } }
+			add_homeland = rohnnst
+		} else = { remove_homeland = rohnnst }
+		if = {
+			limit = { cu:romand = { is_primary_culture_of = ROOT } }
+			add_homeland = romand
+		} else = { remove_homeland = romand }
+		if = {
+			limit = { cu:central_american = { is_primary_culture_of = ROOT } }
+			add_homeland = central_american
+		} else = { remove_homeland = central_american }
+		if = {
+			limit = { cu:sardinian = { is_primary_culture_of = ROOT } }
+			add_homeland = sardinian
+		} else = { remove_homeland = sardinian }
+		if = {
+			limit = { cu:scandinavian = { is_primary_culture_of = ROOT } }
+			add_homeland = scandinavian
+		} else = { remove_homeland = scandinavian }
+		if = {
+			limit = { cu:sibir = { is_primary_culture_of = ROOT } }
+			add_homeland = sibir
+		} else = { remove_homeland = sibir }
+		if = {
+			limit = { cu:portuguese = { is_primary_culture_of = ROOT } }
+			add_homeland = portuguese
+		} else = { remove_homeland = portuguese }
+		if = {
+			limit = { cu:syriac = { is_primary_culture_of = ROOT } }
+			add_homeland = syriac
+		} else = { remove_homeland = syriac }
+		if = {
+			limit = { cu:russian = { is_primary_culture_of = ROOT } }
+			add_homeland = russian
+		} else = { remove_homeland = russian }
+		if = {
+			limit = { cu:venetian = { is_primary_culture_of = ROOT } }
+			add_homeland = venetian
+		} else = { remove_homeland = venetian }
+		if = {
+			limit = { cu:vinlander = { is_primary_culture_of = ROOT } }
+			add_homeland = vinlander
+		} else = { remove_homeland = vinlander }
+		if = {
+			limit = { cu:xacitarxani = { is_primary_culture_of = ROOT } }
+			add_homeland = xacitarxani
+		} else = { remove_homeland = xacitarxani }
+		if = {
+			limit = { cu:zhourao = { is_primary_culture_of = ROOT } }
+			add_homeland = zhourao
+		} else = { remove_homeland = zhourao }
+#Victorian Flavor Mod
+		if = {
+			limit = { cu:anglo_indian = { is_primary_culture_of = ROOT } }
+			add_homeland = anglo_indian
+		} else = { remove_homeland = anglo_indian }
+		if = {
+			limit = { cu:antillianen = { is_primary_culture_of = ROOT } }
+			add_homeland = antillianen
+		} else = { remove_homeland = antillianen }
+		if = {
+			limit = { cu:baltic_german = { is_primary_culture_of = ROOT } }
+			add_homeland = baltic_german
+		} else = { remove_homeland = baltic_german }
+		if = {
+			limit = { cu:erzyan = { is_primary_culture_of = ROOT } }
+			add_homeland = erzyan
+		} else = { remove_homeland = erzyan }
+		if = {
+			limit = { cu:estonian = { is_primary_culture_of = ROOT } }
+			add_homeland = estonian
+		} else = { remove_homeland = estonian }
+		if = {
+			limit = { cu:finnish = { is_primary_culture_of = ROOT } }
+			add_homeland = finnish
+		} else = { remove_homeland = finnish }
+		if = {
+			limit = { cu:frisian = { is_primary_culture_of = ROOT } }
+			add_homeland = frisian
+		} else = { remove_homeland = frisian }
+		if = {
+			limit = { cu:griqua = { is_primary_culture_of = ROOT } }
+			add_homeland = griqua
+		} else = { remove_homeland = griqua }
+		if = {
+			limit = { cu:indo = { is_primary_culture_of = ROOT } }
+			add_homeland = indo
+		} else = { remove_homeland = indo }
+		if = {
+			limit = { cu:izhorian = { is_primary_culture_of = ROOT } }
+			add_homeland = izhorian
+		} else = { remove_homeland = izhorian }
+		if = {
+			limit = { cu:karelian = { is_primary_culture_of = ROOT } }
+			add_homeland = karelian
+		} else = { remove_homeland = karelian }
+		if = {
+			limit = { cu:komi = { is_primary_culture_of = ROOT } }
+			add_homeland = komi
+		} else = { remove_homeland = komi }
+		if = {
+			limit = { cu:limburgish = { is_primary_culture_of = ROOT } }
+			add_homeland = limburgish
+		} else = { remove_homeland = limburgish }
+		if = {
+			limit = { cu:luxembourgish = { is_primary_culture_of = ROOT } }
+			add_homeland = luxembourgish
+		} else = { remove_homeland = luxembourgish }
+		if = {
+			limit = { cu:mari = { is_primary_culture_of = ROOT } }
+			add_homeland = mari
+		} else = { remove_homeland = mari }
+		if = {
+			limit = { cu:mokshan = { is_primary_culture_of = ROOT } }
+			add_homeland = mokshan
+		} else = { remove_homeland = mokshan }
+		if = {
+			limit = { cu:obugric = { is_primary_culture_of = ROOT } }
+			add_homeland = obugric
+		} else = { remove_homeland = obugric }
+		if = {
+			limit = { cu:romani = { is_primary_culture_of = ROOT } }
+			add_homeland = romani
+		} else = { remove_homeland = romani }
+		if = {
+			limit = { cu:ryukyan = { is_primary_culture_of = ROOT } }
+			add_homeland = ryukyan
+		} else = { remove_homeland = ryukyan }
+		if = {
+			limit = { cu:sami = { is_primary_culture_of = ROOT } }
+			add_homeland = sami
+		} else = { remove_homeland = sami }
+		if = {
+			limit = { cu:samoyedic = { is_primary_culture_of = ROOT } }
+			add_homeland = samoyedic
+		} else = { remove_homeland = samoyedic }
+		if = {
+			limit = { cu:udmurt = { is_primary_culture_of = ROOT } }
+			add_homeland = udmurt
+		} else = { remove_homeland = udmurt }
+		if = {
+			limit = { cu:voortrekker = { is_primary_culture_of = ROOT } }
+			add_homeland = voortrekker
+		} else = { remove_homeland = voortrekker }
+	}
+}
+
+ccr_remove_all_primary_cultures = {
+	custom_tooltip = {
+		text = ccr_enforce_values_tt2
+		
+		scope:target_country = {
+			remove_primary_culture = cu:aborigine
+			remove_primary_culture = cu:afar
+			remove_primary_culture = cu:afro_american
+			remove_primary_culture = cu:afro_antillean
+			remove_primary_culture = cu:afro_brazilian
+			remove_primary_culture = cu:afro_caribbean
+			remove_primary_culture = cu:afro_caribeno
+			remove_primary_culture = cu:aimara
+			remove_primary_culture = cu:ainu
+			remove_primary_culture = cu:akan
+			remove_primary_culture = cu:albanian
+			remove_primary_culture = cu:alemannic
+			remove_primary_culture = cu:algonquian
+			remove_primary_culture = cu:amazonian
+			remove_primary_culture = cu:amhara
+			remove_primary_culture = cu:anglo_canadian
+			remove_primary_culture = cu:apache
+			remove_primary_culture = cu:armenian
+			remove_primary_culture = cu:ashkenazi
+			remove_primary_culture = cu:assamese
+			remove_primary_culture = cu:assyrian
+			remove_primary_culture = cu:athabaskan
+			remove_primary_culture = cu:australian
+			remove_primary_culture = cu:avadhi
+			remove_primary_culture = cu:azande
+			remove_primary_culture = cu:azerbaijani
+			remove_primary_culture = cu:baganda
+			remove_primary_culture = cu:baguirmi
+			remove_primary_culture = cu:bakongo
+			remove_primary_culture = cu:balinese
+			remove_primary_culture = cu:baluchi
+			remove_primary_culture = cu:bambara
+			remove_primary_culture = cu:basque
+			remove_primary_culture = cu:bassa
+			remove_primary_culture = cu:batak
+			remove_primary_culture = cu:bedouin
+			remove_primary_culture = cu:beja
+			remove_primary_culture = cu:bengali
+			remove_primary_culture = cu:berber
+			remove_primary_culture = cu:bidan
+			remove_primary_culture = cu:bihari
+			remove_primary_culture = cu:boer
+			remove_primary_culture = cu:bornean
+			remove_primary_culture = cu:bosniak
+			remove_primary_culture = cu:brazilian
+			remove_primary_culture = cu:breton
+			remove_primary_culture = cu:british
+			remove_primary_culture = cu:bulgarian
+			remove_primary_culture = cu:burmese
+			remove_primary_culture = cu:byelorussian
+			remove_primary_culture = cu:caddoan
+			remove_primary_culture = cu:cajun
+			remove_primary_culture = cu:cariban
+			remove_primary_culture = cu:caribeno
+			remove_primary_culture = cu:catalan
+			remove_primary_culture = cu:central_american
+			remove_primary_culture = cu:cherokee
+			remove_primary_culture = cu:chewa
+			remove_primary_culture = cu:circassian
+			remove_primary_culture = cu:comanche
+			remove_primary_culture = cu:corsican
+			remove_primary_culture = cu:cree
+			remove_primary_culture = cu:croat
+			remove_primary_culture = cu:czech
+			remove_primary_culture = cu:dakota
+			remove_primary_culture = cu:danish
+			remove_primary_culture = cu:dayak
+			remove_primary_culture = cu:dinka
+			remove_primary_culture = cu:dixie
+			remove_primary_culture = cu:dutch
+			remove_primary_culture = cu:dyula
+			remove_primary_culture = cu:edo
+			remove_primary_culture = cu:equatorial_bantu
+			remove_primary_culture = cu:estonian
+			remove_primary_culture = cu:ewe
+			remove_primary_culture = cu:fang
+			remove_primary_culture = cu:filipino
+			remove_primary_culture = cu:finnish
+			remove_primary_culture = cu:flemish
+			remove_primary_culture = cu:fluvian_bantu
+			remove_primary_culture = cu:fon
+			remove_primary_culture = cu:franco_canadian
+			remove_primary_culture = cu:francoprovencal
+			remove_primary_culture = cu:french
+			remove_primary_culture = cu:fulbe
+			remove_primary_culture = cu:fur
+			remove_primary_culture = cu:galician
+			remove_primary_culture = cu:georgian
+			remove_primary_culture = cu:greek
+			remove_primary_culture = cu:guajiro
+			remove_primary_culture = cu:guarani
+			remove_primary_culture = cu:gujarati
+			remove_primary_culture = cu:hakka
+			remove_primary_culture = cu:han
+			remove_primary_culture = cu:haratin
+			remove_primary_culture = cu:hausa
+			remove_primary_culture = cu:hawaiian
+			remove_primary_culture = cu:hazara
+			remove_primary_culture = cu:herero
+			remove_primary_culture = cu:hokan
+			remove_primary_culture = cu:hungarian
+			remove_primary_culture = cu:ibibio
+			remove_primary_culture = cu:ibo
+			remove_primary_culture = cu:icelandic
+			remove_primary_culture = cu:inuit
+			remove_primary_culture = cu:irish
+			remove_primary_culture = cu:iroquoian
+			remove_primary_culture = cu:japanese
+			remove_primary_culture = cu:javan
+			remove_primary_culture = cu:kachin
+			remove_primary_culture = cu:kalmyk
+			remove_primary_culture = cu:kanauji
+			remove_primary_culture = cu:kannada
+			remove_primary_culture = cu:kanuri
+			remove_primary_culture = cu:karen
+			remove_primary_culture = cu:kashmiri
+			remove_primary_culture = cu:kavango_bantu
+			remove_primary_culture = cu:kazak
+			remove_primary_culture = cu:khmer
+			remove_primary_culture = cu:khmu
+			remove_primary_culture = cu:khoisan
+			remove_primary_culture = cu:kikuyu
+			remove_primary_culture = cu:kirgiz
+			remove_primary_culture = cu:kissi
+			remove_primary_culture = cu:korean
+			remove_primary_culture = cu:kru
+			remove_primary_culture = cu:kurdish
+			remove_primary_culture = cu:lacustrine_bantu
+			remove_primary_culture = cu:lao
+			remove_primary_culture = cu:latvian
+			remove_primary_culture = cu:lithuanian
+			remove_primary_culture = cu:lomwe
+			remove_primary_culture = cu:luba
+			remove_primary_culture = cu:lunda
+			remove_primary_culture = cu:luo
+			remove_primary_culture = cu:maasai
+			remove_primary_culture = cu:maghrebi
+			remove_primary_culture = cu:makua
+			remove_primary_culture = cu:malagasy
+			remove_primary_culture = cu:malay
+			remove_primary_culture = cu:malayalam
+			remove_primary_culture = cu:maltese
+			remove_primary_culture = cu:manchu
+			remove_primary_culture = cu:mande
+			remove_primary_culture = cu:manipuri
+			remove_primary_culture = cu:maori
+			remove_primary_culture = cu:marathi
+			remove_primary_culture = cu:mashriqi
+			remove_primary_culture = cu:mayan
+			remove_primary_culture = cu:melanesian
+			remove_primary_culture = cu:metis
+			remove_primary_culture = cu:mexican
+			remove_primary_culture = cu:miao
+			remove_primary_culture = cu:micronesian
+			remove_primary_culture = cu:min
+			remove_primary_culture = cu:miskito
+			remove_primary_culture = cu:misri
+			remove_primary_culture = cu:mixtec
+			remove_primary_culture = cu:moluccan
+			remove_primary_culture = cu:mon
+			remove_primary_culture = cu:mongo
+			remove_primary_culture = cu:mongol
+			remove_primary_culture = cu:moro
+			remove_primary_culture = cu:mossi
+			remove_primary_culture = cu:muisca
+			remove_primary_culture = cu:muskogean
+			remove_primary_culture = cu:nahua
+			remove_primary_culture = cu:navajo
+			remove_primary_culture = cu:nepali
+			remove_primary_culture = cu:nez_perce
+			remove_primary_culture = cu:nguni
+			remove_primary_culture = cu:nilotic
+			remove_primary_culture = cu:north_andean
+			remove_primary_culture = cu:north_caucasian
+			remove_primary_culture = cu:north_german
+			remove_primary_culture = cu:north_italian
+			remove_primary_culture = cu:norwegian
+			remove_primary_culture = cu:nuba
+			remove_primary_culture = cu:nuer
+			remove_primary_culture = cu:occitan
+			remove_primary_culture = cu:oodham
+			remove_primary_culture = cu:oriya
+			remove_primary_culture = cu:oromo
+			remove_primary_culture = cu:ovimbundu
+			remove_primary_culture = cu:paiute
+			remove_primary_culture = cu:panjabi
+			remove_primary_culture = cu:pashtun
+			remove_primary_culture = cu:patagonian
+			remove_primary_culture = cu:persian
+			remove_primary_culture = cu:platinean
+			remove_primary_culture = cu:polish
+			remove_primary_culture = cu:polynesian
+			remove_primary_culture = cu:portuguese
+			remove_primary_culture = cu:pueblo
+			remove_primary_culture = cu:quechua
+			remove_primary_culture = cu:rajput
+			remove_primary_culture = cu:romanian
+			remove_primary_culture = cu:ruanda
+			remove_primary_culture = cu:rundi
+			remove_primary_culture = cu:russian
+			remove_primary_culture = cu:salish
+			remove_primary_culture = cu:sami
+			remove_primary_culture = cu:sara
+			remove_primary_culture = cu:scottish
+			remove_primary_culture = cu:sena
+			remove_primary_culture = cu:senufo
+			remove_primary_culture = cu:sephardic
+			remove_primary_culture = cu:serb
+			remove_primary_culture = cu:shan
+			remove_primary_culture = cu:shona
+			remove_primary_culture = cu:siberian
+			remove_primary_culture = cu:sidama
+			remove_primary_culture = cu:sindi
+			remove_primary_culture = cu:sinhala
+			remove_primary_culture = cu:siouan
+			remove_primary_culture = cu:slovak
+			remove_primary_culture = cu:slovene
+			remove_primary_culture = cu:somali
+			remove_primary_culture = cu:songhai
+			remove_primary_culture = cu:sorb
+			remove_primary_culture = cu:sotho
+			remove_primary_culture = cu:south_andean
+			remove_primary_culture = cu:south_german
+			remove_primary_culture = cu:south_italian
+			remove_primary_culture = cu:spanish
+			remove_primary_culture = cu:sudanese
+			remove_primary_culture = cu:sukuma
+			remove_primary_culture = cu:sumatran
+			remove_primary_culture = cu:swahili
+			remove_primary_culture = cu:swedish
+			remove_primary_culture = cu:tajik
+			remove_primary_culture = cu:tamil
+			remove_primary_culture = cu:tarascan
+			remove_primary_culture = cu:tatar
+			remove_primary_culture = cu:teda
+			remove_primary_culture = cu:telegu
+			remove_primary_culture = cu:thai
+			remove_primary_culture = cu:tibetan
+			remove_primary_culture = cu:tigray
+			remove_primary_culture = cu:tiv
+			remove_primary_culture = cu:tonga
+			remove_primary_culture = cu:tswana
+			remove_primary_culture = cu:tuareg
+			remove_primary_culture = cu:tupinamba
+			remove_primary_culture = cu:turkish
+			remove_primary_culture = cu:turkmen
+			remove_primary_culture = cu:tuvan
+			remove_primary_culture = cu:ugrian
+			remove_primary_culture = cu:uighur
+			remove_primary_culture = cu:ukrainian
+			remove_primary_culture = cu:unyamwezi
+			remove_primary_culture = cu:uzbek
+			remove_primary_culture = cu:vietnamese
+			remove_primary_culture = cu:wallonian
+			remove_primary_culture = cu:welsh
+			remove_primary_culture = cu:wolof
+			remove_primary_culture = cu:xhosa
+			remove_primary_culture = cu:yakut
+			remove_primary_culture = cu:yankee
+			remove_primary_culture = cu:yao
+			remove_primary_culture = cu:yemenite
+			remove_primary_culture = cu:yi
+			remove_primary_culture = cu:yoruba
+			remove_primary_culture = cu:yuanzhumin
+			remove_primary_culture = cu:yue
+			remove_primary_culture = cu:zapotec
+			remove_primary_culture = cu:zhuang
+			remove_primary_culture = cu:zulu
+#Syncretic Cultures
+			remove_primary_culture = cu:afghan
+			remove_primary_culture = cu:anglosphere
+			remove_primary_culture = cu:arabian
+			remove_primary_culture = cu:baltic
+			remove_primary_culture = cu:modern_british
+			remove_primary_culture = cu:byzantine
+			remove_primary_culture = cu:canadian
+			remove_primary_culture = cu:caucasian_culture
+			remove_primary_culture = cu:celtic_culture
+			remove_primary_culture = cu:central_african_culture
+			remove_primary_culture = cu:chinese
+			remove_primary_culture = cu:czecho_slovak
+			remove_primary_culture = cu:austro_hungarian
+			remove_primary_culture = cu:dravidian_culture
+			remove_primary_culture = cu:east_aryan
+			remove_primary_culture = cu:eastern_african_culture
+			remove_primary_culture = cu:ethiopian_culture
+			remove_primary_culture = cu:european_american
+			remove_primary_culture = cu:finnic_culture
+			remove_primary_culture = cu:german
+			remove_primary_culture = cu:germanic
+			remove_primary_culture = cu:modern_korean
+			remove_primary_culture = cu:gran_colombian
+			remove_primary_culture = cu:hindustani_culture
+			remove_primary_culture = cu:hispanic
+			remove_primary_culture = cu:latino
+			remove_primary_culture = cu:iranian
+			remove_primary_culture = cu:iberian
+			remove_primary_culture = cu:iberic
+			remove_primary_culture = cu:indian
+			remove_primary_culture = cu:indo_aryan_culture
+			remove_primary_culture = cu:israeli
+			remove_primary_culture = cu:italian
+			remove_primary_culture = cu:malayan
+			remove_primary_culture = cu:modern_brazilian
+			remove_primary_culture = cu:modern_burmese
+			remove_primary_culture = cu:modern_french
+			remove_primary_culture = cu:modern_japanese
+			remove_primary_culture = cu:modern_mexican
+			remove_primary_culture = cu:modern_portuguese
+			remove_primary_culture = cu:modern_spanish
+			remove_primary_culture = cu:native_american
+			remove_primary_culture = cu:netherlandic
+			remove_primary_culture = cu:polish_lithuanian
+			remove_primary_culture = cu:polynesian_culture
+			remove_primary_culture = cu:porto_brazilian
+			remove_primary_culture = cu:romance
+			remove_primary_culture = cu:rus
+			remove_primary_culture = cu:scandinavian
+			remove_primary_culture = cu:southern_african_culture
+			remove_primary_culture = cu:sub_saharan_african
+			remove_primary_culture = cu:swiss_culture
+			remove_primary_culture = cu:tai_culture
+			remove_primary_culture = cu:taiwanese
+			remove_primary_culture = cu:turkic_culture
+			remove_primary_culture = cu:us_american
+			remove_primary_culture = cu:west_slavic_culture
+			remove_primary_culture = cu:west_aryan
+			remove_primary_culture = cu:western_african_culture
+			remove_primary_culture = cu:yugoslavian
+#Divergences Mod
+			remove_primary_culture = cu:afro_amerigan
+			remove_primary_culture = cu:afro_frankish
+			remove_primary_culture = cu:afro_germanic
+			remove_primary_culture = cu:afro_latino
+			remove_primary_culture = cu:amazonian
+			remove_primary_culture = cu:amazonien
+			remove_primary_culture = cu:caladeran
+			remove_primary_culture = cu:anglois
+			remove_primary_culture = cu:athesian
+			remove_primary_culture = cu:atlantian
+			remove_primary_culture = cu:balters
+			remove_primary_culture = cu:bashkir
+			remove_primary_culture = cu:bastaard
+			remove_primary_culture = cu:belgian
+			remove_primary_culture = cu:beornian
+			remove_primary_culture = cu:czech
+			remove_primary_culture = cu:burgundian
+			remove_primary_culture = cu:spanish
+			remove_primary_culture = cu:central_italian
+			remove_primary_culture = cu:cham
+			remove_primary_culture = cu:filipino
+			remove_primary_culture = cu:south_german
+			remove_primary_culture = cu:north_german
+			remove_primary_culture = cu:boer
+			remove_primary_culture = cu:granadan
+			remove_primary_culture = cu:guianan
+			remove_primary_culture = cu:aborigine
+			remove_primary_culture = cu:kaiganese
+			remove_primary_culture = cu:kazani
+			remove_primary_culture = cu:kirim
+			remove_primary_culture = cu:ayitian
+			remove_primary_culture = cu:krymchak
+			remove_primary_culture = cu:lotharian
+			remove_primary_culture = cu:lusitanian
+			remove_primary_culture = cu:maori
+			remove_primary_culture = cu:navarragon
+			remove_primary_culture = cu:north_russian
+			remove_primary_culture = cu:plantagenian
+			remove_primary_culture = cu:galician
+			remove_primary_culture = cu:occitan
+			remove_primary_culture = cu:qingqiuan
+			remove_primary_culture = cu:rheinish
+			remove_primary_culture = cu:rohnnst
+			remove_primary_culture = cu:romand
+			remove_primary_culture = cu:central_american
+			remove_primary_culture = cu:sardinian
+			remove_primary_culture = cu:scandinavian
+			remove_primary_culture = cu:sibir
+			remove_primary_culture = cu:portuguese
+			remove_primary_culture = cu:syriac
+			remove_primary_culture = cu:russian
+			remove_primary_culture = cu:venetian
+			remove_primary_culture = cu:vinlander
+			remove_primary_culture = cu:xacitarxani
+			remove_primary_culture = cu:zhourao
+#Victorian Flavor Mod
+			remove_primary_culture = cu:anglo_indian
+			remove_primary_culture = cu:antillianen
+			remove_primary_culture = cu:baltic_german
+			remove_primary_culture = cu:erzyan
+			remove_primary_culture = cu:estonian
+			remove_primary_culture = cu:finnish
+			remove_primary_culture = cu:frisian
+			remove_primary_culture = cu:griqua
+			remove_primary_culture = cu:indo
+			remove_primary_culture = cu:izhorian
+			remove_primary_culture = cu:karelian
+			remove_primary_culture = cu:komi
+			remove_primary_culture = cu:limburgish
+			remove_primary_culture = cu:luxembourgish
+			remove_primary_culture = cu:mari
+			remove_primary_culture = cu:mokshan
+			remove_primary_culture = cu:obugric
+			remove_primary_culture = cu:romani
+			remove_primary_culture = cu:ryukyan
+			remove_primary_culture = cu:sami
+			remove_primary_culture = cu:samoyedic
+			remove_primary_culture = cu:udmurt
+			remove_primary_culture = cu:voortrekker
+		}
+	}
+}
+
+ccr_harmonize_subject_cultures = {
+	scope:target_country = {
+		if = {
+			limit = { root = { country_has_primary_culture = cu:aborigine } }
+			add_primary_culture = cu:aborigine
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afar } }
+			add_primary_culture = cu:afar
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_american } }
+			add_primary_culture = cu:afro_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_antillean } }
+			add_primary_culture = cu:afro_antillean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_brazilian } }
+			add_primary_culture = cu:afro_brazilian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_caribbean } }
+			add_primary_culture = cu:afro_caribbean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_caribeno } }
+			add_primary_culture = cu:afro_caribeno
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:aimara } }
+			add_primary_culture = cu:aimara
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ainu } }
+			add_primary_culture = cu:ainu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:akan } }
+			add_primary_culture = cu:akan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:albanian } }
+			add_primary_culture = cu:albanian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:alemannic } }
+			add_primary_culture = cu:alemannic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:algonquian } }
+			add_primary_culture = cu:algonquian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:amazonian } }
+			add_primary_culture = cu:amazonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:amhara } }
+			add_primary_culture = cu:amhara
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:anglo_canadian } }
+			add_primary_culture = cu:anglo_canadian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:apache } }
+			add_primary_culture = cu:apache
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:armenian } }
+			add_primary_culture = cu:armenian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ashkenazi } }
+			add_primary_culture = cu:ashkenazi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:assamese } }
+			add_primary_culture = cu:assamese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:assyrian } }
+			add_primary_culture = cu:assyrian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:athabaskan } }
+			add_primary_culture = cu:athabaskan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:australian } }
+			add_primary_culture = cu:australian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:avadhi } }
+			add_primary_culture = cu:avadhi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:azande } }
+			add_primary_culture = cu:azande
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:azerbaijani } }
+			add_primary_culture = cu:azerbaijani
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:baganda } }
+			add_primary_culture = cu:baganda
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:baguirmi } }
+			add_primary_culture = cu:baguirmi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bakongo } }
+			add_primary_culture = cu:bakongo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:balinese } }
+			add_primary_culture = cu:balinese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:baluchi } }
+			add_primary_culture = cu:baluchi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bambara } }
+			add_primary_culture = cu:bambara
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:basque } }
+			add_primary_culture = cu:basque
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bassa } }
+			add_primary_culture = cu:bassa
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:batak } }
+			add_primary_culture = cu:batak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bedouin } }
+			add_primary_culture = cu:bedouin
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:beja } }
+			add_primary_culture = cu:beja
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bengali } }
+			add_primary_culture = cu:bengali
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:berber } }
+			add_primary_culture = cu:berber
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bidan } }
+			add_primary_culture = cu:bidan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bihari } }
+			add_primary_culture = cu:bihari
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:boer } }
+			add_primary_culture = cu:boer
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bornean } }
+			add_primary_culture = cu:bornean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bosniak } }
+			add_primary_culture = cu:bosniak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:brazilian } }
+			add_primary_culture = cu:brazilian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:breton } }
+			add_primary_culture = cu:breton
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:british } }
+			add_primary_culture = cu:british
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bulgarian } }
+			add_primary_culture = cu:bulgarian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:burmese } }
+			add_primary_culture = cu:burmese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:byelorussian } }
+			add_primary_culture = cu:byelorussian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:caddoan } }
+			add_primary_culture = cu:caddoan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:cajun } }
+			add_primary_culture = cu:cajun
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:cariban } }
+			add_primary_culture = cu:cariban
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:caribeno } }
+			add_primary_culture = cu:caribeno
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:catalan } }
+			add_primary_culture = cu:catalan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:central_american } }
+			add_primary_culture = cu:central_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:cherokee } }
+			add_primary_culture = cu:cherokee
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:chewa } }
+			add_primary_culture = cu:chewa
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:circassian } }
+			add_primary_culture = cu:circassian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:comanche } }
+			add_primary_culture = cu:comanche
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:corsican } }
+			add_primary_culture = cu:corsican
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:cree } }
+			add_primary_culture = cu:cree
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:croat } }
+			add_primary_culture = cu:croat
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:czech } }
+			add_primary_culture = cu:czech
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dakota } }
+			add_primary_culture = cu:dakota
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:danish } }
+			add_primary_culture = cu:danish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dayak } }
+			add_primary_culture = cu:dayak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dinka } }
+			add_primary_culture = cu:dinka
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dixie } }
+			add_primary_culture = cu:dixie
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dutch } }
+			add_primary_culture = cu:dutch
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dyula } }
+			add_primary_culture = cu:dyula
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:edo } }
+			add_primary_culture = cu:edo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:equatorial_bantu } }
+			add_primary_culture = cu:equatorial_bantu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:estonian } }
+			add_primary_culture = cu:estonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ewe } }
+			add_primary_culture = cu:ewe
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:fang } }
+			add_primary_culture = cu:fang
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:filipino } }
+			add_primary_culture = cu:filipino
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:finnish } }
+			add_primary_culture = cu:finnish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:flemish } }
+			add_primary_culture = cu:flemish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:fluvian_bantu } }
+			add_primary_culture = cu:fluvian_bantu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:fon } }
+			add_primary_culture = cu:fon
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:franco_canadian } }
+			add_primary_culture = cu:franco_canadian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:francoprovencal } }
+			add_primary_culture = cu:francoprovencal
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:french } }
+			add_primary_culture = cu:french
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:fulbe } }
+			add_primary_culture = cu:fulbe
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:fur } }
+			add_primary_culture = cu:fur
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:galician } }
+			add_primary_culture = cu:galician
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:georgian } }
+			add_primary_culture = cu:georgian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:greek } }
+			add_primary_culture = cu:greek
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:guajiro } }
+			add_primary_culture = cu:guajiro
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:guarani } }
+			add_primary_culture = cu:guarani
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:gujarati } }
+			add_primary_culture = cu:gujarati
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hakka } }
+			add_primary_culture = cu:hakka
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:han } }
+			add_primary_culture = cu:han
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:haratin } }
+			add_primary_culture = cu:haratin
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hausa } }
+			add_primary_culture = cu:hausa
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hawaiian } }
+			add_primary_culture = cu:hawaiian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hazara } }
+			add_primary_culture = cu:hazara
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:herero } }
+			add_primary_culture = cu:herero
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hokan } }
+			add_primary_culture = cu:hokan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hungarian } }
+			add_primary_culture = cu:hungarian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ibibio } }
+			add_primary_culture = cu:ibibio
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ibo } }
+			add_primary_culture = cu:ibo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:icelandic } }
+			add_primary_culture = cu:icelandic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:inuit } }
+			add_primary_culture = cu:inuit
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:irish } }
+			add_primary_culture = cu:irish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:iroquoian } }
+			add_primary_culture = cu:iroquoian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:japanese } }
+			add_primary_culture = cu:japanese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:javan } }
+			add_primary_culture = cu:javan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kachin } }
+			add_primary_culture = cu:kachin
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kalmyk } }
+			add_primary_culture = cu:kalmyk
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kanauji } }
+			add_primary_culture = cu:kanauji
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kannada } }
+			add_primary_culture = cu:kannada
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kanuri } }
+			add_primary_culture = cu:kanuri
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:karen } }
+			add_primary_culture = cu:karen
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kashmiri } }
+			add_primary_culture = cu:kashmiri
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kavango_bantu } }
+			add_primary_culture = cu:kavango_bantu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kazak } }
+			add_primary_culture = cu:kazak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:khmer } }
+			add_primary_culture = cu:khmer
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:khmu } }
+			add_primary_culture = cu:khmu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:khoisan } }
+			add_primary_culture = cu:khoisan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kikuyu } }
+			add_primary_culture = cu:kikuyu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kirgiz } }
+			add_primary_culture = cu:kirgiz
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kissi } }
+			add_primary_culture = cu:kissi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:korean } }
+			add_primary_culture = cu:korean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kru } }
+			add_primary_culture = cu:kru
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kurdish } }
+			add_primary_culture = cu:kurdish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lacustrine_bantu } }
+			add_primary_culture = cu:lacustrine_bantu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lao } }
+			add_primary_culture = cu:lao
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:latvian } }
+			add_primary_culture = cu:latvian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lithuanian } }
+			add_primary_culture = cu:lithuanian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lomwe } }
+			add_primary_culture = cu:lomwe
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:luba } }
+			add_primary_culture = cu:luba
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lunda } }
+			add_primary_culture = cu:lunda
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:luo } }
+			add_primary_culture = cu:luo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:maasai } }
+			add_primary_culture = cu:maasai
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:maghrebi } }
+			add_primary_culture = cu:maghrebi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:makua } }
+			add_primary_culture = cu:makua
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:malagasy } }
+			add_primary_culture = cu:malagasy
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:malay } }
+			add_primary_culture = cu:malay
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:malayalam } }
+			add_primary_culture = cu:malayalam
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:maltese } }
+			add_primary_culture = cu:maltese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:manchu } }
+			add_primary_culture = cu:manchu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mande } }
+			add_primary_culture = cu:mande
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:manipuri } }
+			add_primary_culture = cu:manipuri
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:maori } }
+			add_primary_culture = cu:maori
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:marathi } }
+			add_primary_culture = cu:marathi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mashriqi } }
+			add_primary_culture = cu:mashriqi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mayan } }
+			add_primary_culture = cu:mayan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:melanesian } }
+			add_primary_culture = cu:melanesian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:metis } }
+			add_primary_culture = cu:metis
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mexican } }
+			add_primary_culture = cu:mexican
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:miao } }
+			add_primary_culture = cu:miao
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:micronesian } }
+			add_primary_culture = cu:micronesian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:min } }
+			add_primary_culture = cu:min
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:miskito } }
+			add_primary_culture = cu:miskito
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:misri } }
+			add_primary_culture = cu:misri
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mixtec } }
+			add_primary_culture = cu:mixtec
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:moluccan } }
+			add_primary_culture = cu:moluccan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mon } }
+			add_primary_culture = cu:mon
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mongo } }
+			add_primary_culture = cu:mongo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mongol } }
+			add_primary_culture = cu:mongol
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:moro } }
+			add_primary_culture = cu:moro
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mossi } }
+			add_primary_culture = cu:mossi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:muisca } }
+			add_primary_culture = cu:muisca
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:muskogean } }
+			add_primary_culture = cu:muskogean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nahua } }
+			add_primary_culture = cu:nahua
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:navajo } }
+			add_primary_culture = cu:navajo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nepali } }
+			add_primary_culture = cu:nepali
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nez_perce } }
+			add_primary_culture = cu:nez_perce
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nguni } }
+			add_primary_culture = cu:nguni
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nilotic } }
+			add_primary_culture = cu:nilotic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_andean } }
+			add_primary_culture = cu:north_andean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_caucasian } }
+			add_primary_culture = cu:north_caucasian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_german } }
+			add_primary_culture = cu:north_german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_italian } }
+			add_primary_culture = cu:north_italian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:norwegian } }
+			add_primary_culture = cu:norwegian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nuba } }
+			add_primary_culture = cu:nuba
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:nuer } }
+			add_primary_culture = cu:nuer
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:occitan } }
+			add_primary_culture = cu:occitan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:oodham } }
+			add_primary_culture = cu:oodham
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:oriya } }
+			add_primary_culture = cu:oriya
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:oromo } }
+			add_primary_culture = cu:oromo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ovimbundu } }
+			add_primary_culture = cu:ovimbundu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:paiute } }
+			add_primary_culture = cu:paiute
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:panjabi } }
+			add_primary_culture = cu:panjabi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:pashtun } }
+			add_primary_culture = cu:pashtun
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:patagonian } }
+			add_primary_culture = cu:patagonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:persian } }
+			add_primary_culture = cu:persian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:platinean } }
+			add_primary_culture = cu:platinean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:polish } }
+			add_primary_culture = cu:polish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:polynesian } }
+			add_primary_culture = cu:polynesian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:portuguese } }
+			add_primary_culture = cu:portuguese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:pueblo } }
+			add_primary_culture = cu:pueblo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:quechua } }
+			add_primary_culture = cu:quechua
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:rajput } }
+			add_primary_culture = cu:rajput
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:romanian } }
+			add_primary_culture = cu:romanian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ruanda } }
+			add_primary_culture = cu:ruanda
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:rundi } }
+			add_primary_culture = cu:rundi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:russian } }
+			add_primary_culture = cu:russian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:salish } }
+			add_primary_culture = cu:salish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sami } }
+			add_primary_culture = cu:sami
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sara } }
+			add_primary_culture = cu:sara
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:scottish } }
+			add_primary_culture = cu:scottish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sena } }
+			add_primary_culture = cu:sena
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:senufo } }
+			add_primary_culture = cu:senufo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sephardic } }
+			add_primary_culture = cu:sephardic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:serb } }
+			add_primary_culture = cu:serb
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:shan } }
+			add_primary_culture = cu:shan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:shona } }
+			add_primary_culture = cu:shona
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:siberian } }
+			add_primary_culture = cu:siberian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sidama } }
+			add_primary_culture = cu:sidama
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sindi } }
+			add_primary_culture = cu:sindi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sinhala } }
+			add_primary_culture = cu:sinhala
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:siouan } }
+			add_primary_culture = cu:siouan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:slovak } }
+			add_primary_culture = cu:slovak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:slovene } }
+			add_primary_culture = cu:slovene
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:somali } }
+			add_primary_culture = cu:somali
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:songhai } }
+			add_primary_culture = cu:songhai
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sorb } }
+			add_primary_culture = cu:sorb
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sotho } }
+			add_primary_culture = cu:sotho
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:south_andean } }
+			add_primary_culture = cu:south_andean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:south_german } }
+			add_primary_culture = cu:south_german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:south_italian } }
+			add_primary_culture = cu:south_italian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:spanish } }
+			add_primary_culture = cu:spanish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sudanese } }
+			add_primary_culture = cu:sudanese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sukuma } }
+			add_primary_culture = cu:sukuma
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sumatran } }
+			add_primary_culture = cu:sumatran
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:swahili } }
+			add_primary_culture = cu:swahili
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:swedish } }
+			add_primary_culture = cu:swedish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tajik } }
+			add_primary_culture = cu:tajik
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tamil } }
+			add_primary_culture = cu:tamil
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tarascan } }
+			add_primary_culture = cu:tarascan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tatar } }
+			add_primary_culture = cu:tatar
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:teda } }
+			add_primary_culture = cu:teda
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:telegu } }
+			add_primary_culture = cu:telegu
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:thai } }
+			add_primary_culture = cu:thai
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tibetan } }
+			add_primary_culture = cu:tibetan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tigray } }
+			add_primary_culture = cu:tigray
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tiv } }
+			add_primary_culture = cu:tiv
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tonga } }
+			add_primary_culture = cu:tonga
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tswana } }
+			add_primary_culture = cu:tswana
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tuareg } }
+			add_primary_culture = cu:tuareg
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tupinamba } }
+			add_primary_culture = cu:tupinamba
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:turkish } }
+			add_primary_culture = cu:turkish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:turkmen } }
+			add_primary_culture = cu:turkmen
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tuvan } }
+			add_primary_culture = cu:tuvan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ugrian } }
+			add_primary_culture = cu:ugrian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:uighur } }
+			add_primary_culture = cu:uighur
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ukrainian } }
+			add_primary_culture = cu:ukrainian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:unyamwezi } }
+			add_primary_culture = cu:unyamwezi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:uzbek } }
+			add_primary_culture = cu:uzbek
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:vietnamese } }
+			add_primary_culture = cu:vietnamese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:wallonian } }
+			add_primary_culture = cu:wallonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:welsh } }
+			add_primary_culture = cu:welsh
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:wolof } }
+			add_primary_culture = cu:wolof
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:xhosa } }
+			add_primary_culture = cu:xhosa
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yakut } }
+			add_primary_culture = cu:yakut
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yankee } }
+			add_primary_culture = cu:yankee
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yao } }
+			add_primary_culture = cu:yao
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yemenite } }
+			add_primary_culture = cu:yemenite
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yi } }
+			add_primary_culture = cu:yi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yoruba } }
+			add_primary_culture = cu:yoruba
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yuanzhumin } }
+			add_primary_culture = cu:yuanzhumin
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yue } }
+			add_primary_culture = cu:yue
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:zapotec } }
+			add_primary_culture = cu:zapotec
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:zhuang } }
+			add_primary_culture = cu:zhuang
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:zulu } }
+			add_primary_culture = cu:zulu
+			}
+#Syncrectic Cultures Mod
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afghan } }
+			add_primary_culture = cu:afghan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:anglosphere } }
+			add_primary_culture = cu:anglosphere
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:arabian } }
+			add_primary_culture = cu:arabian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:baltic } }
+			add_primary_culture = cu:baltic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_british } }
+			add_primary_culture = cu:modern_british
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:byzantine } }
+			add_primary_culture = cu:byzantine
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:canadian } }
+			add_primary_culture = cu:canadian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:caucasian_culture } }
+			add_primary_culture = cu:caucasian_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:celtic_culture } }
+			add_primary_culture = cu:celtic_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:central_african_culture } }
+			add_primary_culture = cu:central_african_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:chinese } }
+			add_primary_culture = cu:chinese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:czecho_slovak } }
+			add_primary_culture = cu:czecho_slovak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:austro_hungarian } }
+			add_primary_culture = cu:austro_hungarian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:dravidian_culture } }
+			add_primary_culture = cu:dravidian_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:east_aryan } }
+			add_primary_culture = cu:east_aryan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:eastern_african_culture } }
+			add_primary_culture = cu:eastern_african_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ethiopian_culture } }
+			add_primary_culture = cu:ethiopian_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:european_american } }
+			add_primary_culture = cu:european_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:finnic_culture } }
+			add_primary_culture = cu:finnic_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:german } }
+			add_primary_culture = cu:german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:germanic } }
+			add_primary_culture = cu:germanic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_korean } }
+			add_primary_culture = cu:modern_korean
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:gran_colombian } }
+			add_primary_culture = cu:gran_colombian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hindustani_culture } }
+			add_primary_culture = cu:hindustani_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:hispanic } }
+			add_primary_culture = cu:hispanic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:latino } }
+			add_primary_culture = cu:latino
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:iranian } }
+			add_primary_culture = cu:iranian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:iberian } }
+			add_primary_culture = cu:iberian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:iberic } }
+			add_primary_culture = cu:iberic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:indian } }
+			add_primary_culture = cu:indian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:indo_aryan_culture } }
+			add_primary_culture = cu:indo_aryan_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:israeli } }
+			add_primary_culture = cu:israeli
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:italian } }
+			add_primary_culture = cu:italian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:malayan } }
+			add_primary_culture = cu:malayan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_brazilian } }
+			add_primary_culture = cu:modern_brazilian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_burmese } }
+			add_primary_culture = cu:modern_burmese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_french } }
+			add_primary_culture = cu:modern_french
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_japanese } }
+			add_primary_culture = cu:modern_japanese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_mexican } }
+			add_primary_culture = cu:modern_mexican
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_portuguese } }
+			add_primary_culture = cu:modern_portuguese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:modern_spanish } }
+			add_primary_culture = cu:modern_spanish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:native_american } }
+			add_primary_culture = cu:native_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:netherlandic } }
+			add_primary_culture = cu:netherlandic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:polish_lithuanian } }
+			add_primary_culture = cu:polish_lithuanian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:polynesian_culture } }
+			add_primary_culture = cu:polynesian_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:porto_brazilian } }
+			add_primary_culture = cu:porto_brazilian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:romance } }
+			add_primary_culture = cu:romance
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:rus } }
+			add_primary_culture = cu:rus
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:scandinavian } }
+			add_primary_culture = cu:scandinavian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:southern_african_culture } }
+			add_primary_culture = cu:southern_african_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sub_saharan_african } }
+			add_primary_culture = cu:sub_saharan_african
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:swiss_culture } }
+			add_primary_culture = cu:swiss_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:tai_culture } }
+			add_primary_culture = cu:tai_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:taiwanese } }
+			add_primary_culture = cu:taiwanese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:turkic_culture } }
+			add_primary_culture = cu:turkic_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:us_american } }
+			add_primary_culture = cu:us_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:west_slavic_culture } }
+			add_primary_culture = cu:west_slavic_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:west_aryan } }
+			add_primary_culture = cu:west_aryan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:western_african_culture } }
+			add_primary_culture = cu:western_african_culture
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:yugoslavian } }
+			add_primary_culture = cu:yugoslavian
+#Divergences Mod
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_amerigan } }
+			add_primary_culture = cu:afro_amerigan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_frankish } }
+			add_primary_culture = cu:afro_frankish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_germanic } }
+			add_primary_culture = cu:afro_germanic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:afro_latino } }
+			add_primary_culture = cu:afro_latino
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:amazonian } }
+			add_primary_culture = cu:amazonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:amazonien } }
+			add_primary_culture = cu:amazonien
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:caladeran } }
+			add_primary_culture = cu:caladeran
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:anglois } }
+			add_primary_culture = cu:anglois
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:athesian } }
+			add_primary_culture = cu:athesian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:atlantian } }
+			add_primary_culture = cu:atlantian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:balters } }
+			add_primary_culture = cu:balters
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bashkir } }
+			add_primary_culture = cu:bashkir
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:bastaard } }
+			add_primary_culture = cu:bastaard
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:belgian } }
+			add_primary_culture = cu:belgian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:beornian } }
+			add_primary_culture = cu:beornian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:czech } }
+			add_primary_culture = cu:czech
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:burgundian } }
+			add_primary_culture = cu:burgundian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:spanish } }
+			add_primary_culture = cu:spanish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:central_italian } }
+			add_primary_culture = cu:central_italian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:cham } }
+			add_primary_culture = cu:cham
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:filipino } }
+			add_primary_culture = cu:filipino
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:south_german } }
+			add_primary_culture = cu:south_german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_german } }
+			add_primary_culture = cu:north_german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:boer } }
+			add_primary_culture = cu:boer
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:granadan } }
+			add_primary_culture = cu:granadan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:guianan } }
+			add_primary_culture = cu:guianan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:aborigine } }
+			add_primary_culture = cu:aborigine
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kaiganese } }
+			add_primary_culture = cu:kaiganese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kazani } }
+			add_primary_culture = cu:kazani
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:kirim } }
+			add_primary_culture = cu:kirim
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ayitian } }
+			add_primary_culture = cu:ayitian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:krymchak } }
+			add_primary_culture = cu:krymchak
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lotharian } }
+			add_primary_culture = cu:lotharian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:lusitanian } }
+			add_primary_culture = cu:lusitanian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:maori } }
+			add_primary_culture = cu:maori
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:navarragon } }
+			add_primary_culture = cu:navarragon
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:north_russian } }
+			add_primary_culture = cu:north_russian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:plantagenian } }
+			add_primary_culture = cu:plantagenian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:galician } }
+			add_primary_culture = cu:galician
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:occitan } }
+			add_primary_culture = cu:occitan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:qingqiuan } }
+			add_primary_culture = cu:qingqiuan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:rheinish } }
+			add_primary_culture = cu:rheinish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:rohnnst } }
+			add_primary_culture = cu:rohnnst
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:romand } }
+			add_primary_culture = cu:romand
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:central_american } }
+			add_primary_culture = cu:central_american
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sardinian } }
+			add_primary_culture = cu:sardinian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:scandinavian } }
+			add_primary_culture = cu:scandinavian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sibir } }
+			add_primary_culture = cu:sibir
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:portuguese } }
+			add_primary_culture = cu:portuguese
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:syriac } }
+			add_primary_culture = cu:syriac
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:russian } }
+			add_primary_culture = cu:russian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:venetian } }
+			add_primary_culture = cu:venetian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:vinlander } }
+			add_primary_culture = cu:vinlander
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:xacitarxani } }
+			add_primary_culture = cu:xacitarxani
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:zhourao } }
+			add_primary_culture = cu:zhourao
+		}
+#Victorian Flavor Mod
+		if = {
+			limit = { root = { country_has_primary_culture = cu:anglo_indian } }
+			add_primary_culture = cu:anglo_indian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:antillianen } }
+			add_primary_culture = cu:antillianen
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:baltic_german } }
+			add_primary_culture = cu:baltic_german
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:erzyan } }
+			add_primary_culture = cu:erzyan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:estonian } }
+			add_primary_culture = cu:estonian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:finnish } }
+			add_primary_culture = cu:finnish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:frisian } }
+			add_primary_culture = cu:frisian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:griqua } }
+			add_primary_culture = cu:griqua
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:indo } }
+			add_primary_culture = cu:indo
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:izhorian } }
+			add_primary_culture = cu:izhorian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:karelian } }
+			add_primary_culture = cu:karelian
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:komi } }
+			add_primary_culture = cu:komi
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:limburgish } }
+			add_primary_culture = cu:limburgish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:luxembourgish } }
+			add_primary_culture = cu:luxembourgish
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mari } }
+			add_primary_culture = cu:mari
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:mokshan } }
+			add_primary_culture = cu:mokshan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:obugric } }
+			add_primary_culture = cu:obugric
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:romani } }
+			add_primary_culture = cu:romani
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:ryukyan } }
+			add_primary_culture = cu:ryukyan
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:sami } }
+			add_primary_culture = cu:sami
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:samoyedic } }
+			add_primary_culture = cu:samoyedic
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:udmurt } }
+			add_primary_culture = cu:udmurt
+		}
+		if = {
+			limit = { root = { country_has_primary_culture = cu:voortrekker } }
+			add_primary_culture = cu:voortrekker
+		}
+	}
+}

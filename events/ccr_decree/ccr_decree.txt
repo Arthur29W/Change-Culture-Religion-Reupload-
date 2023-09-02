@@ -1,0 +1,153 @@
+namespace = ccrd
+
+ccrd.1 = {
+	type = country_event
+	placement = scope:decree_ccr_target
+
+	title = decree_ccr
+	desc = ccrd.e.d
+	flavor = ccrd.e.f
+
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+
+	duration = 1
+	
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/upperclass_party"
+	
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	
+	trigger = {
+		has_game_rule = shorter_ccr_decree_time
+		any_scope_state = {
+			has_decree = decree_ccr
+		}
+	}
+	
+	immediate = {
+		random_scope_state = {
+			limit = { has_decree = decree_ccr }
+			save_scope_as = decree_ccr_target
+			ccr_homelands_effect = yes
+		}
+	}
+	
+	option = {
+		name = ccrd.e.o
+		default_option = yes
+	}
+}
+
+ccrd.2 = {
+	type = country_event
+	hidden = yes
+	
+	trigger = {
+		OR = {
+			has_game_rule = default_ccr_decree_time
+			has_game_rule = longer_ccr_decree_time
+		}
+		any_scope_state = {
+			has_decree = decree_ccr
+		}
+	}
+	
+	immediate = {
+		every_scope_state = {
+			limit = { has_decree = decree_ccr }
+			
+			if = {
+				limit = {
+					has_variable = decree_ccr_count
+				}
+				change_variable = {
+					name = decree_ccr_count
+					add = 1
+				}
+			}
+			else = {
+				set_variable = {
+					name = decree_ccr_count
+					value = 1
+				}
+			}
+		}
+	}
+}
+
+ccrd.3 = {
+	type = country_event
+	placement = scope:decree_ccr_target
+
+	title = decree_ccr
+	desc = ccrd.e.d
+	flavor = ccrd.e.f
+
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+
+	duration = 1
+	
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/upperclass_party"
+	
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+	
+	trigger = {
+		OR = {
+			AND = {
+				has_game_rule = default_ccr_decree_time
+				any_scope_state = {
+					has_decree = decree_ccr
+					has_variable = decree_ccr_count
+					var:decree_ccr_count >= 12
+				}
+			}
+			AND = {
+				has_game_rule = longer_ccr_decree_time
+				any_scope_state = {
+					has_decree = decree_ccr
+					has_variable = decree_ccr_count
+					var:decree_ccr_count >= 60
+				}
+			}
+		}
+	}
+	
+	immediate = {
+		if = {
+			limit = {
+				has_game_rule = default_ccr_decree_time
+			}
+			random_scope_state = {
+				limit = {
+					has_decree = decree_ccr
+					has_variable = decree_ccr_count
+					var:decree_ccr_count >= 12
+				}
+				save_scope_as = decree_ccr_target
+				ccr_homelands_effect = yes
+				remove_variable = decree_ccr_count
+			}
+		}
+		else_if = {
+			limit = {
+				has_game_rule = longer_ccr_decree_time
+			}
+			random_scope_state = {
+				limit = {
+					has_decree = decree_ccr
+					has_variable = decree_ccr_count
+					var:decree_ccr_count >= 60
+				}
+				save_scope_as = decree_ccr_target
+				ccr_homelands_effect = yes
+				remove_variable = decree_ccr_count
+			}
+		}
+	}
+	
+	option = {
+		name = ccrd.e.o
+		default_option = yes
+	}
+}

@@ -1,0 +1,829 @@
+namespace = ccrDIV
+
+ccrDIV.1 = {
+	type = country_event
+	title = ccr.1.1
+	desc = ccrr.culture
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	immediate = {
+		ccr_generate_culture_data = yes
+	}
+
+	option = {
+		name = ccr.return
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccrDIV.1.1a
+		add_primary_culture = cu:anglois
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:anglois } }
+	}
+
+	option = {
+		name = ccrDIV.1.1b
+		remove_primary_culture = cu:anglois
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:anglois }
+	}
+
+	option = {
+		name = ccrDIV.1.2a
+		add_primary_culture = cu:burgundian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:burgundian } }
+	}
+
+	option = {
+		name = ccrDIV.1.2b
+		remove_primary_culture = cu:burgundian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:burgundian }
+	}
+
+	option = {
+		name = ccrDIV.1.3a
+		add_primary_culture = cu:vinlander
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:vinlander } }
+	}
+
+	option = {
+		name = ccrDIV.1.3b
+		remove_primary_culture = cu:vinlander
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:vinlander }
+	}
+
+	option = {
+		name = ccrDIV.1.4a
+		add_primary_culture = cu:ayitian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:ayitian } }
+	}
+
+	option = {
+		name = ccrDIV.1.4b
+		remove_primary_culture = cu:ayitian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:ayitian }
+	}
+
+	option = {
+		name = ccrDIV.1.5a
+		add_primary_culture = cu:belgian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:belgian } }
+	}
+
+	option = {
+		name = ccrDIV.1.5b
+		remove_primary_culture = cu:belgian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:belgian }
+	}
+
+	option = {
+		name = ccrDIV.1.6a
+		add_primary_culture = cu:plantagenian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:plantagenian } }
+	}
+
+	option = {
+		name = ccrDIV.1.6b
+		remove_primary_culture = cu:plantagenian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:plantagenian }
+	}
+
+	option = {
+		name = ccrDIV.1.7a
+		add_primary_culture = cu:lusitanian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:lusitanian } }
+	}
+
+	option = {
+		name = ccrDIV.1.7b
+		remove_primary_culture = cu:lusitanian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:lusitanian }
+	}
+
+	option = {
+		name = ccrDIV.1.8a
+		add_primary_culture = cu:granadan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:granadan } }
+	}
+
+	option = {
+		name = ccrDIV.1.8b
+		remove_primary_culture = cu:granadan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:granadan }
+	}
+
+	option = {
+		name = ccrDIV.1.9a
+		add_primary_culture = cu:rheinish
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:rheinish } }
+	}
+
+	option = {
+		name = ccrDIV.1.9b
+		remove_primary_culture = cu:rheinish
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:rheinish }
+	}
+
+	option = {
+		name = ccrDIV.1.10a
+		add_primary_culture = cu:afro_germanic
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:afro_germanic } }
+	}
+
+	option = {
+		name = ccrDIV.1.10b
+		remove_primary_culture = cu:afro_germanic
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:afro_germanic }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.2
+				popup = yes
+			}
+		}
+	}
+}
+
+
+
+ccrDIV.2 = {
+	type = country_event
+	title = ccr.1.1
+	desc = ccrc.culture
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.1
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrDIV.2.1a
+		add_primary_culture = cu:afro_frankish
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:afro_frankish } }
+	}
+
+	option = {
+		name = ccrDIV.2.1b
+		remove_primary_culture = cu:afro_frankish
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:afro_frankish }
+	}
+
+	option = {
+		name = ccrDIV.2.2a
+		add_primary_culture = cu:afro_amerigan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:afro_amerigan } }
+	}
+
+	option = {
+		name = ccrDIV.2.2b
+		remove_primary_culture = cu:afro_amerigan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:afro_amerigan }
+	}
+
+	option = {
+		name = ccrDIV.2.3a
+		add_primary_culture = cu:afro_latino
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:afro_latino } }
+	}
+
+	option = {
+		name = ccrDIV.2.3b
+		remove_primary_culture = cu:afro_latino
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:afro_latino }
+	}
+
+	option = {
+		name = ccrDIV.2.4a
+		add_primary_culture = cu:beornian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:beornian } }
+	}
+
+	option = {
+		name = ccrDIV.2.4b
+		remove_primary_culture = cu:beornian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:beornian }
+	}
+
+	option = {
+		name = ccrDIV.2.5a
+		add_primary_culture = cu:lotharian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:lotharian } }
+	}
+
+	option = {
+		name = ccrDIV.2.5b
+		remove_primary_culture = cu:lotharian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:lotharian }
+	}
+
+	option = {
+		name = ccrDIV.2.6a
+		add_primary_culture = cu:atlantian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:atlantian } }
+	}
+
+	option = {
+		name = ccrDIV.2.6b
+		remove_primary_culture = cu:atlantian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:atlantian }
+	}
+
+	option = {
+		name = ccrDIV.2.7a
+		add_primary_culture = cu:amazonien
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:amazonien } }
+	}
+
+	option = {
+		name = ccrDIV.2.7b
+		remove_primary_culture = cu:amazonien
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:amazonien }
+	}
+
+	option = {
+		name = ccrDIV.2.8a
+		add_primary_culture = cu:qingqiuan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:qingqiuan } }
+	}
+
+	option = {
+		name = ccrDIV.2.8b
+		remove_primary_culture = cu:qingqiuan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:qingqiuan }
+	}
+
+	option = {
+		name = ccrDIV.2.9a
+		add_primary_culture = cu:zhourao
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:zhourao } }
+	}
+
+	option = {
+		name = ccrDIV.2.9b
+		remove_primary_culture = cu:zhourao
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:zhourao }
+	}
+
+	option = {
+		name = ccrDIV.2.10a
+		add_primary_culture = cu:kaiganese
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:kaiganese } }
+	}
+
+	option = {
+		name = ccrDIV.2.10b
+		remove_primary_culture = cu:kaiganese
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:kaiganese }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.3
+				popup = yes
+			}
+		}
+	}
+}
+
+ccrDIV.3 = {
+	type = country_event
+	title = ccr.1.1
+	desc = ccrc.culture
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.2
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrDIV.3.1a
+		add_primary_culture = cu:rohnnst
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:rohnnst } }
+	}
+
+	option = {
+		name = ccrDIV.3.1b
+		remove_primary_culture = cu:rohnnst
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:rohnnst }
+	}
+
+	option = {
+		name = ccrDIV.3.2a
+		add_primary_culture = cu:athesian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:athesian } }
+	}
+
+	option = {
+		name = ccrDIV.3.2b
+		remove_primary_culture = cu:athesian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:athesian }
+	}
+
+	option = {
+		name = ccrDIV.3.3a
+		add_primary_culture = cu:guianan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:guianan } }
+	}
+
+	option = {
+		name = ccrDIV.3.3b
+		remove_primary_culture = cu:guianan
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:guianan }
+	}
+
+	option = {
+		name = ccrDIV.3.4a
+		add_primary_culture = cu:cham
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:cham } }
+	}
+
+	option = {
+		name = ccrDIV.3.4b
+		remove_primary_culture = cu:cham
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:cham }
+	}
+
+	option = {
+		name = ccrDIV.3.5a
+		add_primary_culture = cu:syriac
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:syriac } }
+	}
+
+	option = {
+		name = ccrDIV.3.5b
+		remove_primary_culture = cu:syriac
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:syriac }
+	}
+
+	option = {
+		name = ccrDIV.3.6a
+		add_primary_culture = cu:bastaard
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:bastaard } }
+	}
+
+	option = {
+		name = ccrDIV.3.6b
+		remove_primary_culture = cu:bastaard
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:bastaard }
+	}
+
+	option = {
+		name = ccrDIV.3.7a
+		add_primary_culture = cu:caladeran
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:caladeran } }
+	}
+
+	option = {
+		name = ccrDIV.3.7b
+		remove_primary_culture = cu:caladeran
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:caladeran }
+	}
+
+	option = {
+		name = ccrDIV.3.8a
+		add_primary_culture = cu:north_russian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:north_russian } }
+	}
+
+	option = {
+		name = ccrDIV.3.8b
+		remove_primary_culture = cu:north_russian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:north_russian }
+	}
+
+	option = {
+		name = ccrDIV.3.9a
+		add_primary_culture = cu:scandinavian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:scandinavian } }
+	}
+
+	option = {
+		name = ccrDIV.3.9b
+		remove_primary_culture = cu:scandinavian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:scandinavian }
+	}
+
+	option = {
+		name = ccrDIV.3.10a
+		add_primary_culture = cu:balters
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:balters } }
+	}
+
+	option = {
+		name = ccrDIV.3.10b
+		remove_primary_culture = cu:balters
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:balters }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.4
+				popup = yes
+			}
+		}
+	}
+}
+
+ccrDIV.4 = {
+	type = country_event
+	title = ccr.1.1
+	desc = ccrc.culture
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.3
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrDIV.4.1a
+		add_primary_culture = cu:venetian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:venetian } }
+	}
+
+	option = {
+		name = ccrDIV.4.1b
+		remove_primary_culture = cu:venetian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:venetian }
+	}
+
+	option = {
+		name = ccrDIV.4.2a
+		add_primary_culture = cu:central_italian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:central_italian } }
+	}
+
+	option = {
+		name = ccrDIV.4.2b
+		remove_primary_culture = cu:central_italian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:central_italian }
+	}
+
+	option = {
+		name = ccrDIV.4.3a
+		add_primary_culture = cu:romand
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:romand } }
+	}
+
+	option = {
+		name = ccrDIV.4.3b
+		remove_primary_culture = cu:romand
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:romand }
+	}
+
+	option = {
+		name = ccrDIV.4.4a
+		add_primary_culture = cu:sardinian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:sardinian } }
+	}
+
+	option = {
+		name = ccrDIV.4.4b
+		remove_primary_culture = cu:sardinian
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:sardinian }
+	}
+
+	option = {
+		name = ccrDIV.4.5a
+		add_primary_culture = cu:navarragon
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:navarragon } }
+	}
+
+	option = {
+		name = ccrDIV.4.5b
+		remove_primary_culture = cu:navarragon
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:navarragon }
+	}
+
+	option = {
+		name = ccrDIV.4.6a
+		add_primary_culture = cu:krymchak
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:krymchak } }
+	}
+
+	option = {
+		name = ccrDIV.4.6b
+		remove_primary_culture = cu:krymchak
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:krymchak }
+	}
+
+	option = {
+		name = ccrDIV.4.7a
+		add_primary_culture = cu:kirim
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:kirim } }
+	}
+
+	option = {
+		name = ccrDIV.4.7b
+		remove_primary_culture = cu:kirim
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:kirim }
+	}
+
+	option = {
+		name = ccrDIV.4.8a
+		add_primary_culture = cu:kazani
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:kazani } }
+	}
+
+	option = {
+		name = ccrDIV.4.8b
+		remove_primary_culture = cu:kazani
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:kazani }
+	}
+
+	option = {
+		name = ccrDIV.4.9a
+		add_primary_culture = cu:bashkir
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:bashkir } }
+	}
+
+	option = {
+		name = ccrDIV.4.9b
+		remove_primary_culture = cu:bashkir
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:bashkir }
+	}
+
+	option = {
+		name = ccrDIV.4.10a
+		add_primary_culture = cu:sibir
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:sibir } }
+	}
+
+	option = {
+		name = ccrDIV.4.10b
+		remove_primary_culture = cu:sibir
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:sibir }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.5
+				popup = yes
+			}
+		}
+	}
+}
+
+ccrDIV.5 = {
+	type = country_event
+	title = ccr.1.1
+	desc = ccrc.culture
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.4
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrDIV.5.1a
+		add_primary_culture = cu:xacitarxani
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_primary_culture	= cu:xacitarxani } }
+	}
+
+	option = {
+		name = ccrDIV.5.1b
+		remove_primary_culture = cu:xacitarxani
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { country_has_primary_culture	= cu:xacitarxani }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrDIV.6
+				popup = yes
+			}
+		}
+	}
+}
+

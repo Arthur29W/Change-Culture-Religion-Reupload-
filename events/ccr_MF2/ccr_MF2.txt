@@ -1,0 +1,518 @@
+namespace = ccrMF2
+
+ccrMF2.1 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	immediate = {
+		ccr_generate_religion_data = yes
+	}
+
+	option = {
+		name = ccr.return
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccrMF2.1.1
+		set_state_religion = rel:akom
+		ccrr_save_religion_var = { RELIGION = "rel:akom" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:akom } }
+	}
+
+	option = {
+		name = ccrMF2.1.2
+		set_state_religion = rel:dreamtime
+		ccrr_save_religion_var = { RELIGION = "rel:dreamtime" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:dreamtime } }
+	}
+
+	option = {
+		name = ccrMF2.1.3
+		set_state_religion = rel:anglican
+		ccrr_save_religion_var = { RELIGION = "rel:anglican" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:anglican } }
+	}
+
+	option = {
+		name = ccrMF2.1.4
+		set_state_religion = rel:bantu_faith
+		ccrr_save_religion_var = { RELIGION = "rel:bantu_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:bantu_faith } }
+	}
+
+	option = {
+		name = ccrMF2.1.5
+		set_state_religion = rel:bon
+		ccrr_save_religion_var = { RELIGION = "rel:bon" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:bon } }
+	}
+
+	option = {
+		name = ccrMF2.1.6
+		set_state_religion = rel:bori
+		ccrr_save_religion_var = { RELIGION = "rel:bori" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:bori } }
+	}
+
+	option = {
+		name = ccrMF2.1.7
+		set_state_religion = rel:chinese_pagan
+		ccrr_save_religion_var = { RELIGION = "rel:chinese_pagan" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:chinese_pagan } }
+	}
+
+	option = {
+		name = ccrMF2.1.8
+		set_state_religion = rel:confucianism
+		ccrr_save_religion_var = { RELIGION = "rel:confucianism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:confucianism } }
+	}
+
+	option = {
+		name = ccrMF2.1.9
+		set_state_religion = rel:eskaleut
+		ccrr_save_religion_var = { RELIGION = "rel:eskaleut" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:eskaleut } }
+	}
+
+	option = {
+		name = ccrMF2.1.10
+		set_state_religion = rel:hellenism
+		ccrr_save_religion_var = { RELIGION = "rel:hellenism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:hellenism } }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.2
+				popup = yes
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+ccrMF2.2 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.1
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrMF2.2.1
+		set_state_religion = rel:donyi_polo
+		ccrr_save_religion_var = { RELIGION = "rel:donyi_polo" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:donyi_polo } }
+	}
+		option = {
+		name = ccrMF2.2.2
+		set_state_religion = rel:inti
+		ccrr_save_religion_var = { RELIGION = "rel:inti" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:inti } }
+	}
+		option = {
+		name = ccrMF2.2.3
+		set_state_religion = rel:jain
+		ccrr_save_religion_var = { RELIGION = "rel:jain" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:jain } }
+	}
+		option = {
+		name = ccrMF2.2.4
+		set_state_religion = rel:kemetism
+		ccrr_save_religion_var = { RELIGION = "rel:kemetism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:kemetism } }
+	}
+		option = {
+		name = ccrMF2.2.5
+		set_state_religion = rel:indonesian
+		ccrr_save_religion_var = { RELIGION = "rel:indonesian" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:indonesian } }
+	}
+		option = {
+		name = ccrMF2.2.6
+		set_state_religion = rel:san_faith
+		ccrr_save_religion_var = { RELIGION = "rel:san_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:san_faith } }
+	}
+		option = {
+		name = ccrMF2.2.7
+		set_state_religion = rel:kushitic
+		ccrr_save_religion_var = { RELIGION = "rel:kushitic" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:kushitic } }
+	}
+		option = {
+		name = ccrMF2.2.8
+		set_state_religion = rel:malagasy_faith
+		ccrr_save_religion_var = { RELIGION = "rel:malagasy_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:malagasy_faith } }
+	}
+		option = {
+		name = ccrMF2.2.9
+		set_state_religion = rel:mande_faith
+		ccrr_save_religion_var = { RELIGION = "rel:mande_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:mande_faith } }
+	}
+		option = {
+		name = ccrMF2.2.10
+		set_state_religion = rel:mayan_faith
+		ccrr_save_religion_var = { RELIGION = "rel:mayan_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:mayan_faith } }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.3
+				popup = yes
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+ccrMF2.3 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.2
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrMF2.3.1
+		set_state_religion = rel:mormon
+		ccrr_save_religion_var = { RELIGION = "rel:mormon" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:mormon } }
+	}
+	option = {
+		name = ccrMF2.3.2
+		set_state_religion = rel:nahuatl
+		ccrr_save_religion_var = { RELIGION = "rel:nahuatl" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:nahuatl } }
+	}
+	option = {
+		name = ccrMF2.3.3
+		set_state_religion = rel:totemism
+		ccrr_save_religion_var = { RELIGION = "rel:totemism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:totemism } }
+	}
+	option = {
+		name = ccrMF2.3.4
+		set_state_religion = rel:south_american
+		ccrr_save_religion_var = { RELIGION = "rel:south_american" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:south_american } }
+	}
+	option = {
+		name = ccrMF2.3.5
+		set_state_religion = rel:orisa_faith
+		ccrr_save_religion_var = { RELIGION = "rel:orisa_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:orisa_faith } }
+	}
+	option = {
+		name = ccrMF2.3.6
+		set_state_religion = rel:polynesian_faith
+		ccrr_save_religion_var = { RELIGION = "rel:polynesian_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:polynesian_faith } }
+	}
+	option = {
+		name = ccrMF2.3.7
+		set_state_religion = rel:maasai_faith
+		ccrr_save_religion_var = { RELIGION = "rel:maasai_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:maasai_faith } }
+	}
+	option = {
+		name = ccrMF2.3.8
+		set_state_religion = rel:roogan
+		ccrr_save_religion_var = { RELIGION = "rel:roogan" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:roogan } }
+	}
+	option = {
+		name = ccrMF2.3.9
+		set_state_religion = rel:tai_faith
+		ccrr_save_religion_var = { RELIGION = "rel:tai_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:tai_faith } }
+	}
+	option = {
+		name = ccrMF2.3.10
+		set_state_religion = rel:siberian_faith
+		ccrr_save_religion_var = { RELIGION = "rel:siberian_faith" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:siberian_faith } }
+	}
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.4
+				popup = yes
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	
+ccrMF2.4 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrMF2.3
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrMF2.4.1
+		set_state_religion = rel:suomenusko
+		ccrr_save_religion_var = { RELIGION = "rel:suomenusko" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:suomenusko } }
+	}
+		option = {
+		name = ccrMF2.4.2
+		set_state_religion = rel:taiping
+		ccrr_save_religion_var = { RELIGION = "rel:taiping" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:taiping } }
+	}
+		option = {
+		name = ccrMF2.4.3
+		set_state_religion = rel:taoism
+		ccrr_save_religion_var = { RELIGION = "rel:taoism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:taoism } }
+	}
+		option = {
+		name = ccrMF2.4.4
+		set_state_religion = rel:tengriism
+		ccrr_save_religion_var = { RELIGION = "rel:tengriism" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:tengriism } }
+	}
+		option = {
+		name = ccrMF2.4.5
+		set_state_religion = rel:voodoo
+		ccrr_save_religion_var = { RELIGION = "rel:voodoo" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:voodoo } }
+	}
+		option = {
+		name = ccrMF2.4.6
+		set_state_religion = rel:waaqeffanna
+		ccrr_save_religion_var = { RELIGION = "rel:waaqeffanna" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:waaqeffanna } }
+	}
+		option = {
+		name = ccrMF2.4.7
+		set_state_religion = rel:mazdayasna
+		ccrr_save_religion_var = { RELIGION = "rel:mazdayasna" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:mazdayasna } }
+	}

@@ -1,0 +1,152 @@
+ccr_cultural_exchange = {
+	requires_approval = no
+	show_confirmation_box = no
+	should_notify_third_parties = no
+	show_effect_in_tooltip = yes
+	texture = "gfx/interface/icons/war_goals/install_government.dds"
+	dynamic_texture_postfix = obligation
+	
+	potential = {
+		is_ai = no
+	}
+	
+	possible = {
+		is_at_war = no
+		is_revolutionary = no
+		scope:target_country = {
+			is_at_war = no
+			is_revolutionary = no
+			is_subject_of = root
+			relations:root >= relations_threshold:amicable
+			NOT = { has_truce_with = root }
+		}
+		OR = {
+			custom_tooltip = {
+				text = ccr_enforce_values_tt
+				ccr_culturally_identical = yes
+			}
+			scope:target_country = {
+				trigger_if = {
+					limit = { exists = root.var:ccr_new_religion }
+					NOT = { country_has_state_religion = root.var:ccr_new_religion }
+				} trigger_else = {
+					NOT = { country_has_state_religion = root.religion }
+				}
+			}
+		}
+	}
+	
+	accept_effect = {
+		change_infamy = 3
+		change_relations = {
+			country = scope:target_country
+			value = -50
+		}
+		create_truce = {
+			country = scope:target_country
+			months = 36
+		}
+		
+		scope:target_country = {
+			if = {
+				limit = { exists = root.var:ccr_new_religion }
+				set_state_religion = root.var:ccr_new_religion
+				set_variable = {
+					name = ccr_new_religion
+					value = root.var:ccr_new_religion
+				}
+			} else = {
+				set_state_religion = root.religion
+				set_variable = {
+					name = ccr_new_religion
+					value = root.religion
+				}
+			}
+		}
+		
+		ccr_harmonize_subject_cultures = yes
+	}
+	
+	ai = {
+		propose_score = {
+			value = 0
+		}
+	}
+}
+
+ccr_enforce_values = {
+	requires_approval = no
+	show_confirmation_box = no
+	should_notify_third_parties = no
+	show_effect_in_tooltip = yes
+	texture = "gfx/interface/icons/war_goals/install_government.dds"
+	dynamic_texture_postfix = obligation
+	
+	potential = {
+		is_ai = no
+	}
+	
+	possible = {
+		is_at_war = no
+		is_revolutionary = no
+		scope:target_country = {
+			is_at_war = no
+			is_revolutionary = no
+			is_subject_of = root
+			relations:root >= relations_threshold:amicable
+			NOT = { has_truce_with = root }
+		}
+		OR = {
+			custom_tooltip = {
+				text = ccr_enforce_values_tt
+				ccr_culturally_identical = yes
+			}
+			scope:target_country = {
+				trigger_if = {
+					limit = { exists = root.var:ccr_new_religion }
+					NOT = { country_has_state_religion = root.var:ccr_new_religion }
+				} trigger_else = {
+					NOT = { country_has_state_religion = root.religion }
+				}
+			}
+		}
+	}
+	
+	accept_effect = {
+		change_infamy = 5
+		change_relations = {
+			country = scope:target_country
+			value = -50
+		}
+		create_truce = {
+			country = scope:target_country
+			months = 60
+		}
+		
+		scope:target_country = {
+			if = {
+				limit = { exists = root.var:ccr_new_religion }
+				set_state_religion = root.var:ccr_new_religion
+				set_variable = {
+					name = ccr_new_religion
+					value = root.var:ccr_new_religion
+				}
+			} else = {
+				set_state_religion = root.religion
+				set_variable = {
+					name = ccr_new_religion
+					value = root.religion
+				}
+			}
+		}
+		
+		ccr_remove_all_primary_cultures = yes
+		ccr_harmonize_subject_cultures = yes
+	}
+	
+	ai = {
+		propose_score = {
+			value = 0
+		}
+	}
+}

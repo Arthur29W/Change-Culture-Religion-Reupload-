@@ -1,0 +1,9 @@
+on_monthly_pulse_country = {
+	events = {
+		ccrd.1
+		ccrd.2
+		ccrd.3
+		ccrr.1337
+		ccr.2
+	}
+}

@@ -1,0 +1,19 @@
+decree_ccr = {
+	texture = "gfx/interface/icons/decree/decree_promote_national_values.dds"
+	unlocking_technologies = { centralization }
+	ai_weight = { value = 0	}
+	cost = 100
+	
+	modifier = {
+		state_turmoil_effects_mult = 0.5
+		state_mortality_turmoil_mult = 0.02
+	}
+	
+	valid = {
+		is_split_state = no
+		custom_tooltip = {
+			text = decree_ccr_tt
+			ccr_has_foreign_homeland = yes
+		}
+	}
+}

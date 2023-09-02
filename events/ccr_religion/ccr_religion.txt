@@ -1,0 +1,265 @@
+namespace = ccrr
+
+ccrr.1 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	immediate = {
+		ccr_generate_religion_data = yes
+	}
+
+	option = {
+		name = ccr.return
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccrr.1.1
+		set_state_religion = rel:animist
+		ccrr_save_religion_var = { RELIGION = "rel:animist" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:animist } }
+	}
+
+	option = {
+		name = ccrr.1.2
+		set_state_religion = rel:atheist
+		ccrr_save_religion_var = { RELIGION = "rel:atheist" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:atheist } }
+	}
+
+	option = {
+		name = ccrr.1.3
+		set_state_religion = rel:catholic
+		ccrr_save_religion_var = { RELIGION = "rel:catholic" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_christian = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:catholic } }
+	}
+
+	option = {
+		name = ccrr.1.4
+		set_state_religion = rel:gelugpa
+		ccrr_save_religion_var = { RELIGION = "rel:gelugpa" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:gelugpa } }
+	}
+
+	option = {
+		name = ccrr.1.5
+		set_state_religion = rel:hindu
+		ccrr_save_religion_var = { RELIGION = "rel:hindu" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:hindu } }
+	}
+
+	option = {
+		name = ccrr.1.6
+		set_state_religion = rel:jewish
+		ccrr_save_religion_var = { RELIGION = "rel:jewish" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		ccr_large_change = yes
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:jewish } }
+	}
+
+	option = {
+		name = ccrr.1.7
+		set_state_religion = rel:mahayana
+		ccrr_save_religion_var = { RELIGION = "rel:mahayana" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:mahayana } }
+	}
+
+	option = {
+		name = ccrr.1.8
+		set_state_religion = rel:oriental_orthodox
+		ccrr_save_religion_var = { RELIGION = "rel:oriental_orthodox" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_christian = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:oriental_orthodox } }
+	}
+
+	option = {
+		name = ccrr.1.9
+		set_state_religion = rel:orthodox
+		ccrr_save_religion_var = { RELIGION = "rel:orthodox" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_christian = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:orthodox } }
+	}
+
+	option = {
+		name = ccrr.1.10
+		set_state_religion = rel:protestant
+		ccrr_save_religion_var = { RELIGION = "rel:protestant" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_christian = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:protestant } }
+	}
+
+	option = {
+		name = ccr.next
+		hidden_effect = {
+			trigger_event = {
+				id = ccrr.2
+				popup = yes
+			}
+		}
+	}
+}
+
+ccrr.2 = {
+	type = country_event
+	title = ccrr.1.t
+	desc = ccrr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	icon = "gfx/interface/icons/generic_icons/unused/religion_icons.dds"
+
+	option = {
+		name = ccr.exit
+		ccr_back = yes
+		default_option = yes
+	}
+
+	option = {
+		name = ccr.return
+		hidden_effect = {
+			trigger_event = {
+				id = ccrr.1
+				popup = yes
+			}
+		}
+	}
+
+	option = {
+		name = ccrr.2.1
+		set_state_religion = rel:shiite
+		ccrr_save_religion_var = { RELIGION = "rel:shiite" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_muslim = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:shiite } }
+	}
+
+	option = {
+		name = ccrr.2.2
+		set_state_religion = rel:shinto
+		ccrr_save_religion_var = { RELIGION = "rel:shinto" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:shinto } }
+	}
+
+	option = {
+		name = ccrr.2.3
+		set_state_religion = rel:sikh
+		ccrr_save_religion_var = { RELIGION = "rel:sikh" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:sikh } }
+	}
+
+	option = {
+		name = ccrr.2.4
+		set_state_religion = rel:sunni
+		ccrr_save_religion_var = { RELIGION = "rel:sunni" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_muslim = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:sunni } }
+	}
+
+	option = {
+		name = ccrr.2.5
+		set_state_religion = rel:theravada
+		ccrr_save_religion_var = { RELIGION = "rel:theravada" }
+		ccrr_update_characters = yes
+		hidden_effect = { ccrr_ig_devout_update = yes }
+		if = { limit = { ccr_eastern = yes }
+			ccr_small_change = yes
+		} else = { ccr_large_change = yes }
+		ccr_unlock = yes
+		trigger = { NOT = { country_has_state_religion = rel:theravada } }
+	}
+}
+
+ccrr.1337 = {
+	type = country_event
+	hidden = yes
+	
+	trigger = {
+		has_variable = ccr_new_religion
+	}
+	
+	immediate = {
+		ccrr_update_conversion_perc = yes
+		
+		every_scope_state = {
+			ccrr_convert_pops = yes
+			if = { # 100% bonus for the decree
+				limit = { has_decree = decree_promote_national_values }
+				ccrr_convert_pops = yes
+			}
+		}
+	}
+}

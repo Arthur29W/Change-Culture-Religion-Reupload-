@@ -1,0 +1,16 @@
+ccr_mod_length = {
+	default = default_ccr_mod_length
+
+	no_ccr_mod_length = {}
+	shorter_ccr_mod_length = {}
+	default_ccr_mod_length = {}
+	longer_ccr_mod_length = {}
+}
+
+ccr_decree_time = {
+	default = default_ccr_decree_time
+
+	shorter_ccr_decree_time = {}
+	default_ccr_decree_time = {}
+	longer_ccr_decree_time = {}
+}

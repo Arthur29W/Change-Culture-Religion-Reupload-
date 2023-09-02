@@ -1,0 +1,74 @@
+namespace = ccr
+
+ccr.1 = {
+	type = country_event
+	title = ccr_decision
+	desc = ccr.1.d
+	flavor = ccr.flavor
+	event_image = { texture = "gfx/event_pictures/ccr.dds" }
+	
+	option = {
+		name = ccr.exit
+		ccr_unlock = yes
+		default_option = yes
+	}
+	option = {
+		name = ccr.1.1
+		trigger_event = {
+			id = ccrc.1
+			popup = yes
+		}
+	}
+	option = {
+		name = ccr.1.2
+		trigger_event = {
+			id = ccrr.1
+			popup = yes
+		}
+	}
+	option = {
+		name = ccrSYN.1.99
+		trigger_event = {
+			id = ccrSYN.1
+			popup = yes
+		}
+	}
+	option = {
+		name = ccrMF2.1.99
+		trigger_event = {
+			id = ccrMF2.1
+			popup = yes
+		}
+	}
+	option = {
+		name = ccrDIV.1.99
+		trigger_event = {
+			id = ccrDIV.1
+			popup = yes
+		}
+	}
+	option = {
+		name = ccrVFM.1.99
+		trigger_event = {
+			id = ccrVFM.1
+			popup = yes
+		}
+	}
+}
+
+ccr.2 = {
+	type = country_event
+	hidden = yes
+	
+	trigger = {
+		exists = var:ccr_new_religion
+	}
+	
+	immediate = {
+		random_scope_character = {
+			limit = { NOT = { has_variable = ccr_character_modified } }
+			set_variable = ccr_character_modified
+			change_character_religion = ROOT.var:ccr_new_religion
+		}
+	}
+}
